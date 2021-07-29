@@ -1,0 +1,222 @@
+
+a.active{
+  font-weight: bold;
+  color: red;
+}
+
+.image{
+    padding: 10% 25px;
+    background: -webkit-linear-gradient(45deg, var(--image) 0%, #000000 100%),
+    url(img/Forma0.jpg);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size:cover;
+    border-radius: 100px;
+}
+
+.descrizione{
+  width: 100%;
+
+}
+
+.descrizione h4{
+  font-family: sans;
+  font-weight: 300;
+  color: white;
+  margin: 0;
+}
+
+.descrizione h1{
+  font-family: sans-serif;
+  font-weight: 700;
+  font-size: 60px;
+  color: white;
+  margin: 0;
+}
+
+.descrizione h3{
+  font-family: sans;
+  font-size: 25px;
+  font-weight: 300;
+  color: white;
+  margin: 0;
+}
+
+
+.descrizione p{
+  margin-top: 25px !important;
+  font-family: sans;
+  font-weight: 100;
+  font-size: 18px;
+  color: white;
+  margin: 0;
+  margin-bottom: 50px;
+}
+
+
+.btn1{
+  display: inline-block;
+  padding: 12px 20px;
+  background: red;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.btn1:hover{
+  background: rgb(255, 0, 0,.6);
+}
+
+.btn2:hover{
+  background: rgb(0, 0, 0,.6);
+}
+
+.btn2{
+  display: inline-block;
+  padding: 10px 18px;
+  border: 1.5px solid rgb(255, 255, 255);
+  color: #fff;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+
+#video{
+  width: 100%;
+  background: var(--color);
+  border-radius: 100px;
+}
+
+.row{
+  font-size: 0;
+  width: 100%;
+  border-radius: 100px;
+}
+
+.videobox{
+  display: inline-block;
+  background: red;
+  width: 28.2%;               /*20%*/
+  /*height: 150px;*/
+  font-size: 16px;
+  margin: 2.5%;
+  color: white;
+  padding: 15px;
+  border-radius: 200px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.notizie{
+  display: inline-block;
+  background: red;
+  width: 45%;               /*20%*/
+  height: 300px;
+  font-size: 16px;
+  margin: 2.5%;
+  color: white;
+  padding: 15px;
+  border-radius: 30px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.intro{
+  display: inline-block;
+  background: rgba(0 71 91 / 70%);
+  width: 95%;               /*20%*/
+  font-size: 16px;
+  margin: 2.5%;
+  color: white;
+  padding: 15px;
+  border-radius: 200px;
+  text-align: center;
+  font-family: sans-serif;
+}
+<?php
+  include 'php/connessione.php';
+
+  $q = "select * from progetti order by id desc";
+  $ris=$mysqli->query($q);
+  foreach ($ris as $key ) {
+    echo ".vn".$key["id"];
+    echo "{background: -webkit-linear-gradient(45deg, rgba(187 246 255 / 70%) 0%, #000000 100%),";
+    echo "url(".$key["foto"];
+    echo ");";
+    echo "-webkit-background-size: cover;";
+    echo "-moz-background-size: cover;";
+    echo "-o-background-size: cover;";
+    echo "background-size: cover;";
+    echo "}";
+  }
+?>
+
+.v5{
+  background: -webkit-linear-gradient(45deg, rgba(231,31,17,.7) 0%, #000000 100%),
+  url(img/fil.jpg);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.v4{
+  background: -webkit-linear-gradient(45deg, rgba(231,31,17,.7) 0%, #000000 100%),
+  url(img/fil.jpg);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.v3{
+  background: -webkit-linear-gradient(45deg, rgba(231,31,17,.7) 0%, #000000 100%),
+  url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQhB7j9nAvRSXbg5_VdePuYffPWAwEJGX-PPex3BH6ir6ohVB8y);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
+.v2{
+  background: -webkit-linear-gradient(45deg, rgba(231,31,17,.7) 0%, #000000 100%),
+  url(https://www.brandemia.org/wp-content/uploads/2012/10/logo_principal.jpg);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.v1{
+  background: -webkit-linear-gradient(45deg, rgba(231,31,17,.7) 0%, #000000 100%),
+  url();
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#schermata_caricamento {
+  width: 100%;
+  height:100%;
+  position:fixed;
+  top:0;
+  left:0;
+  background-color: black;
+  background-image:url(img2.gif);
+  background-repeat:no-repeat;
+  background-position:center;
+}
+#schermata_caricamento1 {
+  width: 100%;
+  height:100%;
+  position:fixed;
+  top:0;
+  left:0;
+  background-color: white;
+  background-image:url(img50.gif);
+  background-repeat:no-repeat;
+  background-position:center;
+}

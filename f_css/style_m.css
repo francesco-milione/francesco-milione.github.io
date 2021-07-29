@@ -1,0 +1,32 @@
+@media screen and (max-width: 1000px){
+  .videobox{
+    width: 95.2%;
+    font-size: 40px;
+    padding: 30px;
+    margin: 2.5% 2.5%;
+  }
+
+  .image{
+      padding: 20% 50px;
+      width: 100%;
+  }
+
+  .intro{
+    margin: 10% 2.5% 0% 2.5%;
+    font-size: 40px;
+  }
+
+  .descrizione h1 {
+    font-size: 100px;
+  }
+
+  .descrizione h3 {
+    font-size: 50px;
+  }
+
+  .btn1{
+    font-size: 50px;
+    padding: 25px 50px;
+    border-radius: 100px;
+  }
+}

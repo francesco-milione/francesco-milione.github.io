@@ -1,0 +1,216 @@
+@media screen and (min-width: 1000px){
+  .toggleWrapper {
+  padding: 0px 0px 20px 0px;
+    /*transform: translate3d(-50%, -1%, 0);*/
+  }
+
+  .toggleWrapper {
+    float: right;
+    display: inline;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+
+  }
+  .toggleWrapper input {
+    position: absolute;
+    left: -99em;
+  }
+
+  .toggle {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    width: 70px;
+    height: 40px;
+    background-color: #83D8FF;
+    border-radius: 42px;
+    transition: background-color 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  }
+  .toggle:before {
+    /*mattina*/
+    position: absolute;
+    left: -90px;
+    top: 15px;
+    font-size: 18px;
+  }
+  .toggle:after {
+    /*Notte*/
+    position: absolute;
+    right: -90px;
+    top: 15px;
+    font-size: 18px;
+    color: #749ED7;
+
+  }
+
+
+  .toggle__handler {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    top: 2px;
+    left: 3px;
+    width: 35px;
+    height: 35px;
+    background-color: #FFCF96;
+    border-radius: 25px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform: rotate(-45deg);
+  }
+  .toggle__handler .crater {
+    position: absolute;
+    background-color: #E8CDA5;
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+    border-radius: 100%;
+  }
+  .toggle__handler .crater--1 {
+    top: 9px;
+    left: 5px;
+    width: 2px;
+    height: 2px;
+  }
+  .toggle__handler .crater--2 {
+    top: 14px;
+    left: 11px;
+    width: 3px;
+    height: 3px;
+  }
+  .toggle__handler .crater--3 {
+    top: 5px;
+    left: 10px;
+    width: 4px;
+    height: 4px;
+  }
+
+  .star {
+    position: absolute;
+    background-color: #ffffff;
+    transition: all 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    border-radius: 50%;
+  }
+
+  .star--1 {
+    top: 8px;
+    left: 20px;
+    z-index: 3;
+    width: 15px;
+    height: 1px;
+  }
+
+  .star--2 {
+    top: 12px;
+    left: 19px;
+    z-index: 4;
+    width: 15px;
+    height: 1px;
+  }
+
+  .star--3 {
+    top: 17px;
+    left: 25px;
+    z-index: 2;
+    width: 15px;
+    height: 1px;
+  }
+
+  .star--4,
+  .star--5,
+  .star--6 {
+    opacity: 0;
+    transition: all 300ms 0 cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  }
+
+  .star--4 {
+    top: 15px;
+    left: 10px;
+    z-index: 1;
+    width: 1px;
+    height: 1px;
+    transform: translate3d(1px, 0, 0);
+  }
+
+  .star--5 {
+    top: 20px;
+    left: 10px;
+    z-index: 0;
+    width: 1px;
+    height: 1px;
+    transform: translate3d(3px, 0, 0);
+  }
+
+  .star--6 {
+    top: 18px;
+    left: 14px;
+    z-index: 0;
+    width: 1px;
+    height: 1px;
+    transform: translate3d(3px, 0, 0);
+  }
+
+  input:checked + .toggle {
+    background-color: #749DD6;
+  }
+  input:checked + .toggle:before {
+    color: #749ED7;
+  }
+  input:checked + .toggle:after {
+    color: #ffffff;
+  }
+  input:checked + .toggle .toggle__handler {
+    background-color: #FFE5B5;
+    transform: translate3d(25.5px, 0, 0) rotate(0);
+  }
+  input:checked + .toggle .toggle__handler .crater {
+    opacity: 1;
+  }
+  input:checked + .toggle .star--1 {
+    width: 2px;
+    height: 2px;
+  }
+  input:checked + .toggle .star--2 {
+    width: 4px;
+    height: 4px;
+    transform: translate3d(-5px, 0, 0);
+  }
+  input:checked + .toggle .star--3 {
+    width: 2px;
+    height: 2px;
+    transform: translate3d(-7px, 0, 0);
+  }
+  input:checked + .toggle .star--4,
+  input:checked + .toggle .star--5,
+  input:checked + .toggle .star--6 {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  input:checked + .toggle .star--4 {
+    transition: all 300ms 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  }
+  input:checked + .toggle .star--5 {
+    transition: all 300ms 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  }
+  input:checked + .toggle .star--6 {
+    transition: all 300ms 400ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  }
+}
+
+
+
+.white-mode{
+  --color:white;
+  --testo: black;
+  --inv: 100%;
+  --image: rgba(231,31,17,0.7);
+  background: white;
+}
+
+.dark-mode{
+  --color: black;
+  --testo: white;
+  --inv: 0%;
+  --image: rgba(112, 7, 0, 0.7);
+  background: black;
+}

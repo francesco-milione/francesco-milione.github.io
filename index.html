@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="it" dir="ltr">
+<link rel="icon" href="favicon/favicon.ico" />
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+    function myFunction1() {
+      var element = document.body;
+      var x = document.getElementsByClassName("dark-mode");
+      if(x != 0)
+        element.classList.toggle("dark-mode");
+      else
+        element.classList.toggle("white-mode");
+    }
+
+    </script>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="f_css/notte_d.css">
+    <link rel="stylesheet" href="f_css/notte_m.css">
+    <link rel="stylesheet" href="f_css/top.css">
+    <link rel="stylesheet" href="f_css/style_m.css">
+    <link rel="stylesheet" href="f_css/stylepie.css">
+
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+  <body>
+
+      <div id="schermata_caricamento"></div>
+      <script>
+      var element = document.body;
+      element.classList.toggle("white-mode");
+        $("#schermata_caricamento").delay(0);//2900
+        $("#schermata_caricamento").fadeOut(0);//200
+        function myFunction() {
+          var x = document.getElementById("myTopnav");
+          if (x.className == "topnav") {
+              x.className += " responsive";
+          } else {
+            x.className = "topnav";
+          }
+
+        }
+      </script>
+
+
+
+      <div id="header">
+        <a href="index.php"><div class="logo"></div></a>
+        <div class="topnav" id="myTopnav">
+          <ul>
+            <div class="sx">
+
+            <a href="index.html" class="active">Home</a>
+            <a href="pagine/studio.html">Studio</a>
+            <!--<a href="pagine/download.html">Download</a>-->
+            <a href="pagine/tempo_libero.html">Tempo Libero</a>
+
+            <a href="pagine/info.html">Su di me</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+              <i class="fa fa-bars"></i>
+            </a>
+            </div>
+            <div class="dx">
+
+            <div class="toggleWrapper">
+            <input type="checkbox" onclick="myFunction1()"class="dn" id="dn" />
+            <label for="dn" class="toggle">
+              <span class="toggle__handler">
+                <span class="crater crater--1"></span>
+                <span class="crater crater--2"></span>
+                <span class="crater crater--3"></span>
+              </span>
+              <span class="star star--1"></span>
+              <span class="star star--2"></span>
+              <span class="star star--3"></span>
+              <span class="star star--4"></span>
+              <span class="star star--5"></span>
+              <span class="star star--6"></span>
+            </label>
+          </div>
+            </div>
+
+          </ul>
+
+        </div>
+      </div>
+
+      <div id="image" class="image">
+        <div class="descrizione">
+          <h4></h4>
+          <h1>Benvenuto</h1>
+          <h3>nel mio sito web personale</h3>
+          <p> </p>
+          <a href="tree.php"><div class="btn1">Tree</div></a>
+
+
+        </div>
+      </div>
+      <div id="video">
+        <div class="row">
+          <a href="pagine/studio.html"><div class="videobox v1">
+            Studio
+          </div></a>
+          <!--
+          <a href="pagine/download.html"><div class="videobox v2">
+            Download
+          </div></a>-->
+          <a href="pagine/tempo_libero.html"><  <div class="videobox v3">
+            Tempo Libero
+          </div></a>
+
+          <a href="pagine/info.html"><div class="videobox v5">
+            Su di me
+          </div></a>
+        </div>
+          <div class="intro"><h2>Progetti/Notizie</h2></div>
+
+
+           <a href="https://www.stickermule.com/it/unlock?ref_id=3755192701&utm_content=250x250&utm_medium=embed&utm_source=invite" target="_blank">
+             <div class='notizie v10'><img alt="Sticker personalizzati, adesivi die cut, skin per laptop e molto altro. Spedizione gratuita - Sticker Mule" border="0" height="250" src="https://res.cloudinary.com/print-bear/image/upload/v1531752798/banners/stickermule-invite-friends-square.jpg" width="250" />
+           </div>
+         </a>
+
+
+
+      <div id="piedipagina" class="piedipagina">
+        <div class="menuSX">&copy
+          <img src="img/21.png" height="45px">
+        </div>
+        <div class="menuDX"><h4></h4></div>
+      </div>
+
+      <!--<a href="pagine/insert.php">Accesso</a>-->
+  </body>
+</html>
