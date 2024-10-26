@@ -1,142 +1,297 @@
-
 <!DOCTYPE html>
-<html lang="it" dir="ltr">
-<link rel="icon" href="favicon/favicon.ico" />
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript">
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Start your development with Meyawo landing page.">
+    <meta name="author" content="Devcrud">
+    <title>Meyawo Landing page | Free Bootstrap 4.3.x landing page</title>
+    <!-- font icons -->
+    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+    <!-- Bootstrap + Meyawo main styles -->
+	<link rel="stylesheet" href="assets/css/meyawo.css">
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
-    function myFunction1() {
-      var element = document.body;
-      var x = document.getElementsByClassName("dark-mode");
-      if(x != 0)
-        element.classList.toggle("dark-mode");
-      else
-        element.classList.toggle("white-mode");
-    }
-
-    </script>
-    <meta charset="utf-8">
-    <title>Home</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="f_css/notte_d.css">
-    <link rel="stylesheet" href="f_css/notte_m.css">
-    <link rel="stylesheet" href="f_css/top.css">
-    <link rel="stylesheet" href="f_css/style_m.css">
-    <link rel="stylesheet" href="f_css/stylepie.css">
-
-
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <script type="text/javascript"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  </head>
-  <body>
-
-      <div id="schermata_caricamento"></div>
-      <script>
-      var element = document.body;
-      element.classList.toggle("white-mode");
-        $("#schermata_caricamento").delay(0);//2900
-        $("#schermata_caricamento").fadeOut(0);//200
-        function myFunction() {
-          var x = document.getElementById("myTopnav");
-          if (x.className == "topnav") {
-              x.className += " responsive";
-          } else {
-            x.className = "topnav";
-          }
-
-        }
-      </script>
-
-
-
-      <div id="header">
-        <a href="index.php"><div class="logo"></div></a>
-        <div class="topnav" id="myTopnav">
-          <ul>
-            <div class="sx">
-
-            <a href="index.html" class="active">Home</a>
-            <a href="pagine/studio.html">Studio</a>
-            <!--<a href="pagine/download.html">Download</a>-->
-            <a href="pagine/tempo_libero.html">Tempo Libero</a>
-
-            <a href="pagine/info.html">Su di me</a>
-            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-              <i class="fa fa-bars"></i>
+    <!-- Page Navbar -->
+    <nav id="custom-navbar" class="custom-navbar" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="logo" href="#">Dott.ssa Morena Galizia</a>         
+            <ul class="nav">
+                <li class="item">
+                    <a class="link" href="#home">Home</a>
+                </li>
+                <li class="item">
+                    <a class="link" href="#about">Chi sono</a>
+                </li>
+                <li class="item">
+                    <a class="link" href="#service">Di cosa mi occupo</a>
+                </li>
+                <li class="item">
+                    <a class="link" href="#testmonial">Recensioni</a>
+                </li>
+                <li class="item">
+                    <a class="link" href="#contact">Contatti</a>
+                </li>
+                <li class="item ml-md-3">
+                    <a href="#come" class="btn btn-primary">Prenota</a>
+                </li>
+            </ul>
+            <a href="javascript:void(0)" id="nav-toggle" class="hamburger hamburger--elastic">
+                <div class="hamburger-box">
+                  <div class="hamburger-inner"></div>
+                </div>
             </a>
+        </div>          
+    </nav><!-- End of Page Navbar -->
+
+    <!-- page header -->
+    <header id="home" class="header">
+        <div class="overlay"></div>
+
+        
+        <div class="header-content container">
+            <!--
+            <h1 class="header-title">
+                <span class="up">Ciao!</span>
+                <span class="down">Sono Morena Galizia</span>
+            </h1>
+
+            <p class="header-subtitle">Studio di psicologia clinica</p>            
+
+            <a class="link" href="#come"><button class="btn btn-primary">Prenota</button></a>
+            -->
+        </div>          
+          
+    </header><!-- end of page header -->
+
+    <!-- about section -->
+    <section class="section pt-0" id="about">
+        <!-- container -->
+        <div class="container text-center">
+            <!-- about wrapper -->
+            <div class="about">
+                <div class="about-img-holder">
+                    <img src="assets/svg/io.png" class="about-img" alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, meyawo Landing page">
+                </div>
+                <div class="about-caption">
+                    <p class="section-subtitle">Chi sono?</p>
+                    <h2 class="section-title mb-3">Su di me</h2>
+                    <p>
+                        Laureata in Psicologia Clinica e della Salute presso l'Università degli studi di Firenze e attualmente iscritta all'albo dell'Ordine degli Psicologi della regione Emilia-Romagna (n. 11044 sez. A). In quanto psicoterapeuta in formazione sono socia AIAMC (Associazione di Analisi e Modificazione del Comportamento e Terapia Comportamentale e Cognitiva).
+                        <br><br>
+                        Ho proseguito la mia formazione attraverso un lungo periodo di tirocinio presso l'IRCCS - Policlinico Sant'Orsola-Malpighi di Bologna. Inizialmente nel centro di riferimento regionale per i Disturbi dell'Alimentazione, per poi offrire supporto psicologico e condurre sessioni di giocoterapia nell'ambito della pediatria specialistica. Il mio intervento era rivolto a pazienti affetti da patologie croniche e alle loro famiglie.
+                    </p>
+                    <button class="btn-rounded btn btn-outline-primary mt-4">Download CV</button>
+                </div>              
+            </div><!-- end of about wrapper -->
+        </div><!-- end of container -->
+    </section> <!-- end of about section -->
+
+    <!-- service section -->
+    <section class="section" id="service">
+        <div class="container text-center">
+            <p class="section-subtitle">Di cosa mi occupo?</p>
+            <h6 class="section-title mb-6">Problemi legati</h6>
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <div class="body">
+                            <img src="assets/svg/1.png" alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, meyawo Landing page" class="icon">
+                            <h6 class="title">Ansia</h6>
+                            <p class="subtitle">Disturbo d'ansia generalizzato, attacchi di panico, fobie, ansia sociale</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <div class="body">
+                            <img src="assets/svg/2.png" alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, meyawo Landing page" class="icon">
+                            <h6 class="title">Disturbi alimentari</h6>
+                            <p class="subtitle">Labore velit culpa adipisci excepturi consequuntur itaque in nam molestias dolorem iste quod.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <div class="body">
+                            <img src="assets/svg/3.png" alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, meyawo Landing page" class="icon">
+                            <h6 class="title">Stress e bornout</h6>
+                            <p class="subtitle">Labore velit culpa adipisci excepturi consequuntur itaque in nam molestias dolorem iste quod.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <div class="body">
+                            <img src="assets/svg/4.png" alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, meyawo Landing page" class="icon">
+                            <h6 class="title">Problemi di autostima</h6>
+                            <p class="subtitle">Labore velit culpa adipisci excepturi consequuntur itaque in nam molestias dolorem iste quod.</p>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end of row -->
+
+            <div class="row">
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <div class="body">
+                            <img src="assets/svg/5.png" alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, meyawo Landing page" class="icon">
+                            <h6 class="title">Gestione delle emozioni e della rabbia</h6>
+                            <p class="subtitle">Disturbo d'ansia generalizzato, attacchi di panico, fobie, ansia sociale</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <div class="body">
+                            <img src="assets/svg/6.png" alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, meyawo Landing page" class="icon">
+                            <h6 class="title">Difficoltà di comunicazioni e relazionali</h6>
+                            <p class="subtitle">Labore velit culpa adipisci excepturi consequuntur itaque in nam molestias dolorem iste quod.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <div class="body">
+                            <img src="assets/svg/7.png" alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, meyawo Landing page" class="icon">
+                            <h6 class="title">Asseritività</h6>
+                            <p class="subtitle">Labore velit culpa adipisci excepturi consequuntur itaque in nam molestias dolorem iste quod.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <div class="body">
+                            <img src="assets/svg/8.png" alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, meyawo Landing page" class="icon">
+                            <h6 class="title">Problemi di autostima</h6>
+                            <p class="subtitle">Labore velit culpa adipisci excepturi consequuntur itaque in nam molestias dolorem iste quod.</p>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end of row -->
+        </div>
+    </section><!-- end of service section -->
+
+    <!-- section -->
+    <section class="section-sm bg-primary" id="come">
+        <!-- container -->
+        <div class="container text-center text-sm-left">
+            <!-- row -->
+            <div class="row align-items-center">
+                <div class="col-sm">
+                    <h6 class="title text-light">Come lavoro?</h6>
+                    <p class="m-0 text-light" style="padding-bottom: 10%;">
+                        Svolgo la mia pratica clinica credendo che ciascuno di noi possieda nel proprio "bagaglio" gli strumenti (risorse) necessari per affrontare le sfide della vita. Tuttavia, a volte questi strumenti possono essere un po' nascosti e necessitano di un aiuto esterno per emergere e venire utilizzati al meglio.
+                        <br><br>
+                        Richiedere un colloquio conoscitivo è un importante primo passo verso il benessere. Nel mio studio, troverai un ambiente accogliente dove ogni persona può sentirsi ascoltata e libera di esprimere emozioni e pensieri, senza alcun giudizio. Ritengo che empatia e rispetto siano essenziali per instaurare una relazione terapeutica positiva.
+                    </p>
+                    <div style="display: flex; align-items: center;">
+                        <img src="assets/svg/date.png" alt="immagine" style="margin-right: 10px;width: 20vw;">
+                        <p>
+                            Se hai domande o curiosità su cosa accade durante una seduta, compila il modulo qui sotto oppure prenota un appuntamento. Sarò felice di risponderti e di offrirti il supporto di cui hai bisogno.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div id="ie_dynamic_widget" data-base-color="" style="display: flex;justify-content: center;">
+                        <script type="text/javascript" src="https://www.guidapsicologi.it/widget/company_schedule?com=194833&h=0b26016c774f0398b0c4640754ee289c&v=10&utm_source=194833&utm_medium=widget&utm_campaign=widget-company_schedule"></script>
+                        </div>
+                </div>
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </section> <!-- end of section -->
+
+    <!-- testimonial section -->
+    <section class="section" id="testmonial">
+        <div class="container text-center">
+            <p class="section-subtitle">Cosa pensano di me</p>
+            <h6 class="section-title mb-6">Recensioni</h6>
+
+            
+            <!-- row -->
+            <div class="row">
+                <div id="js_widget" class="ie-common-widget ie-reviews">
+                    <script type="text/javascript" src="https://www.guidapsicologi.it/widget/review_extended?com=194833&h=0b26016c774f0398b0c4640754ee289c&v=10"></script>
+                    <div class="portal-by">
+                    <a id="js_portal_by" href="https://www.guidapsicologi.it?utm_source=194833&utm_medium=widget&utm_campaign=widget-review_extended" rel="nofollow" style="text-decoration:none;color:#617d97;font-family:Hind,sans-serif;">
+                    Da <span style='color:#149c97;font-family:Hind,sans-serif;font-weight:400;letter-spacing: 0.015em;text-decoration:underline;'>GuidaPsicologi.it</span>
+                    </a>
+                    </div>
+                    </div>
             </div>
-            <div class="dx">
+        </div> <!-- end of container -->
+    </section> <!-- end of testimonial section -->
 
-            <div class="toggleWrapper">
-            <input type="checkbox" onclick="myFunction1()"class="dn" id="dn" />
-            <label for="dn" class="toggle">
-              <span class="toggle__handler">
-                <span class="crater crater--1"></span>
-                <span class="crater crater--2"></span>
-                <span class="crater crater--3"></span>
-              </span>
-              <span class="star star--1"></span>
-              <span class="star star--2"></span>
-              <span class="star star--3"></span>
-              <span class="star star--4"></span>
-              <span class="star star--5"></span>
-              <span class="star star--6"></span>
-            </label>
-          </div>
+   
+    
+
+    
+
+    
+
+    <!-- contact section -->
+    <section class="section" id="contact">
+        <div class="container text-center">
+            <div class="row align-items-center">
+                <div class="col-sm">
+                    <p class="section-subtitle">Come posso comunicare?</p>
+                    <h6 class="section-title mb-5">Contattami</h6>
+                    <!-- contact form -->
+                    <form action="" class="contact-form col-md-10 col-lg-8 m-auto">
+                        <div class="form-row">
+                            <div class="form-group col-sm-6">
+                                <input type="text" size="50" class="form-control" placeholder="Il tuo nome" required>                 
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <input type="email" class="form-control" placeholder="Email"requried>                 
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <textarea name="comment" id="comment" rows="6"   class="form-control" placeholder="Scrivi qualcosa"></textarea>
+                            </div>
+                            <div class="form-group col-sm-12 mt-3">
+                                <input type="submit" value="Invia messaggio" class="btn btn-outline-primary rounded">                  
+                            </div>
+                        </div>  
+                    </form><!-- end of contact form -->
+                </div>
+                <div class="col-sm">
+                    <p class="section-subtitle">Dove mi trovi?</p>
+                    <h6 class="section-title mb-5">Il mio studio</h6>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4028439.5111261136!2d5.932823339389336!3d44.17525294061289!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477fd55e2c9660f9%3A0xc66dbaafb1ffa4e4!2sDott.ssa%20Morena%20Galizia%20-%20psicologo%20Bologna!5e1!3m2!1sit!2sit!4v1728929074289!5m2!1sit!2sit" width="300" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div><!-- end of container -->
+        </div>
+    </section><!-- end of contact section -->
+
+    <!-- footer -->
+    <div class="container">
+        <footer class="footer">       
+            <p class="mb-0">Copyright <script>document.write(new Date().getFullYear())</script> &copy; <a href="#">Morena Galizia</a></p>
+            
+            <!--
+            <div class="social-links text-right m-auto ml-sm-auto">
+                <a href="javascript:void(0)" class="link"><i class="ti-facebook"></i></a>
+                <a href="javascript:void(0)" class="link"><i class="ti-twitter-alt"></i></a>
+                <a href="javascript:void(0)" class="link"><i class="ti-google"></i></a>
+                <a href="javascript:void(0)" class="link"><i class="ti-pinterest-alt"></i></a>
+                <a href="javascript:void(0)" class="link"><i class="ti-instagram"></i></a>
+                <a href="javascript:void(0)" class="link"><i class="ti-rss"></i></a>
             </div>
+            -->
+        </footer>
+    </div> <!-- end of page footer -->
+	
+	<!-- core  -->
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
 
-          </ul>
+    <!-- bootstrap 3 affix -->
+	<script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
 
-        </div>
-      </div>
+    <!-- Meyawo js -->
+    <script src="assets/js/meyawo.js"></script>
 
-      <div id="image" class="image">
-        <div class="descrizione">
-          <h4></h4>
-          <h1>Benvenuto</h1>
-          <h3>nel mio sito web personale</h3>
-          <p> </p>
-          <a href="tree.php"><div class="btn1">Tree</div></a>
-
-
-        </div>
-      </div>
-      <div id="video">
-        <div class="row">
-          <a href="pagine/studio.html"><div class="videobox v1">
-            Studio
-          </div></a>
-          <!--
-          <a href="pagine/download.html"><div class="videobox v2">
-            Download
-          </div></a>-->
-          <a href="pagine/tempo_libero.html"><  <div class="videobox v3">
-            Tempo Libero
-          </div></a>
-
-          <a href="pagine/info.html"><div class="videobox v5">
-            Su di me
-          </div></a>
-        </div>
-          <div class="intro"><h2>Progetti/Notizie</h2></div>
-
-
-           <a href="https://www.stickermule.com/it/unlock?ref_id=3755192701&utm_content=250x250&utm_medium=embed&utm_source=invite" target="_blank">
-             <div class='notizie v10'><img alt="Sticker personalizzati, adesivi die cut, skin per laptop e molto altro. Spedizione gratuita - Sticker Mule" border="0" height="250" src="https://res.cloudinary.com/print-bear/image/upload/v1531752798/banners/stickermule-invite-friends-square.jpg" width="250" />
-           </div>
-         </a>
-
-
-
-      <div id="piedipagina" class="piedipagina">
-        <div class="menuSX">&copy
-          <img src="img/21.png" height="45px">
-        </div>
-        <div class="menuDX"><h4></h4></div>
-      </div>
-
-      <!--<a href="pagine/insert.php">Accesso</a>-->
-  </body>
+</body>
 </html>
