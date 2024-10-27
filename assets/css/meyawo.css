@@ -555,6 +555,7 @@ pre code {
 }
 
 .container {
+  text-align: right;
   width: 100%;
   padding-right: 15px;
   padding-left: 15px;
@@ -562,6 +563,7 @@ pre code {
   margin-left: auto;
 }
 
+/*
 @media (min-width: 576px) {
   .container {
     max-width: 540px;
@@ -585,6 +587,7 @@ pre code {
     max-width: 1140px;
   }
 }
+*/
 
 .container-fluid {
   width: 100%;
@@ -11133,6 +11136,7 @@ p {
 }
 
 .service-card {
+  align-content: center;
   position: relative;
   min-height: 230px;
   border: 1px solid #dee2e6;
@@ -12074,10 +12078,23 @@ pre .code {
   -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background-image: url(../svg/back4.png);
+  background-image: url(../svg/back5Desktop.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position-x: center ;
+}
+
+.logoImg {
+  background-image: url('../svg/logoBianco.png'); /* Imposta l'immagine di sfondo */
+  background-size: contain; /* Adatta l'immagine al contenitore */
+  background-repeat: no-repeat;
+  width: 5em;
+  height: 5em; /* Imposta l'altezza uguale al testo */
+  margin-right: 2px; /* Spazio tra logo e testo */
+}
+
+.custom-navbar.affix .logoImg{
+  background-image: url('../svg/logoAzzurro.png');
 }
 
 .header .overlay {
@@ -12091,7 +12108,7 @@ pre .code {
 }
 
 .header .header-content {
-  margin-top: 20px;
+  margin-top: 0px;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
@@ -12162,11 +12179,14 @@ pre .code {
   background: #a59cca;
 }
 
+
 @media (max-width: 991.98px) {
   .header {
     background-size: cover;
+    background-image: url(../svg/back5.png);
   }
   .header-content {
+    margin-top: -30% !important;
     padding-left: calc(100% / 5) !important;
   }
 }
