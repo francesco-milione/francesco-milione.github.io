@@ -12078,7 +12078,7 @@ pre .code {
   -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background-image: url(../svg/back5Desktop.png);
+  background-image: url(../svg/back6Desktop.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position-x: center ;
@@ -12090,6 +12090,16 @@ pre .code {
   background-repeat: no-repeat;
   width: 5em;
   height: 5em; /* Imposta l'altezza uguale al testo */
+  margin-right: 2px; /* Spazio tra logo e testo */
+}
+
+.logoImgHeader {
+  background-image: url('../svg/logoBianco.png'); /* Imposta l'immagine di sfondo */
+  background-size: contain; /* Adatta l'immagine al contenitore */
+  background-repeat: no-repeat;
+  width: 100%;
+  background-position: right;
+  height: 20vw; /* Imposta l'altezza uguale al testo */
   margin-right: 2px; /* Spazio tra logo e testo */
 }
 
@@ -12133,7 +12143,7 @@ pre .code {
 }
 
 .header .header-content .header-subtitle {
-  font-size: calc(10px + (22 - 10) * ((100vw - 300px) / (1300 - 300)));
+  font-size: calc(10px + (30 - 10) * ((100vw - 300px) / (1300 - 300)));
   letter-spacing: calc(1px + (7 - 1) * ((100vw - 300px) / (1300 - 300)));
   opacity: .8;
   margin-top: -10px;
@@ -12183,10 +12193,10 @@ pre .code {
 @media (max-width: 991.98px) {
   .header {
     background-size: cover;
-    background-image: url(../svg/back5.png);
+    background-image: url(../svg/back6.png);
   }
   .header-content {
-    margin-top: -30% !important;
+    margin-top: -50% !important;
     padding-left: calc(100% / 5) !important;
   }
 }
