@@ -12285,6 +12285,34 @@ pre .code {
 }
 
 
+
+.contact-form{
+  height: 300px;
+}
+
+.address{
+  height: 300px;
+}
+
+.col-address{
+  padding: 0;
+}
+
+@media (max-width: 767.98px){
+  .contact-form{
+    height: auto;
+  }
+  .address{
+    height: auto;
+  }
+  .col-address{
+    padding: 50px;
+  }
+}
+
+
+
+
 /* Ovverride guidapsicologi */
 .ie-common-widget{
   display: contents !important;
