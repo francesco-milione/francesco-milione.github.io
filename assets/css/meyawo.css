@@ -12189,6 +12189,14 @@ pre .code {
   background: #a59cca;
 }
 
+.address {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra verticalmente il testo */
+}
+
+
 
 @media (max-width: 991.98px) {
   .header {
@@ -12274,4 +12282,19 @@ pre .code {
 
 .section-lg {
   padding: 100px 0 !important;
+}
+
+
+/* Ovverride guidapsicologi */
+.ie-common-widget{
+  display: contents !important;
+  max-width: 100% !important;
+}
+
+.rev-explain{
+  display: block !important;
+}
+
+.rev-explain p{
+  display: table !important;
 }
