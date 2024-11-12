@@ -250,21 +250,21 @@
                     <p class="section-subtitle">Come posso comunicare?</p>
                     <h6 class="section-title mb-5">Contattami</h6>
                     <!-- contact form -->
-                    <form action="" class="contact-form col-md-10 col-lg-8 m-auto">
+                    <form action="process_form.php" method="POST" class="contact-form col-md-10 col-lg-8 m-auto">
                         <div class="form-row">
                             <div class="form-group col-sm-6">
-                                <input type="text" size="50" class="form-control" placeholder="Il tuo nome" required>                 
+                                <input type="text" name="name" size="50" class="form-control" placeholder="Il tuo nome" required>
                             </div>
                             <div class="form-group col-sm-6">
-                                <input type="email" class="form-control" placeholder="Email"requried>                 
+                                <input type="email" name="email" class="form-control" placeholder="Email" required>
                             </div>
                             <div class="form-group col-sm-12">
-                                <textarea name="comment" id="comment" rows="6"   class="form-control" placeholder="Scrivi qualcosa"></textarea>
+                                <textarea name="comment" id="comment" rows="6" class="form-control" placeholder="Scrivi qualcosa"></textarea>
                             </div>
                             <div class="form-group col-sm-12 mt-3">
-                                <input type="submit" value="Invia messaggio" class="btn btn-outline-primary rounded">                  
+                                <input type="submit" value="Invia messaggio" class="btn btn-outline-primary rounded">
                             </div>
-                        </div>  
+                        </div>
                     </form><!-- end of contact form -->
                 </div>
                 <div class="col-sm col-address">

@@ -11138,10 +11138,12 @@ p {
 .service-card {
   align-content: center;
   position: relative;
-  min-height: 230px;
+  min-height: 190px;
   border: 1px solid #dee2e6;
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .service-card .body {
