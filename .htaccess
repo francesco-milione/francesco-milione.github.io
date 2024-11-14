@@ -1,0 +1,7 @@
+ErrorDocument 403 http://morenagaliziapsicologa.it/
+ErrorDocument 404 http://morenagaliziapsicologa.it/
+
+#Redirect 301 http to https
+#RewriteEngine on
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

@@ -12323,6 +12323,7 @@ pre .code {
 
 .rev-explain{
   display: block !important;
+  margin: 0 !important;
 }
 
 .rev-explain p{

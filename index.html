@@ -1,16 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Start your development with Meyawo landing page.">
-    <meta name="author" content="Devcrud">
-    <title>Meyawo Landing page | Free Bootstrap 4.3.x landing page</title>
+    <!-- Metadescrizione principale -->
+    <meta name="description" content="Dott.ssa Morena Galizia - Psicologa clinica specializzata in terapia cognitivo-comportamentale a Bologna. Prenota una consulenza per migliorare il benessere mentale e affrontare ansia, autostima, relazioni e gestione delle emozioni.">
+    <meta name="author" content="Francesco Milione">
+    <title>Morena Galizia Psicologa</title>
     <!-- font icons -->
-    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
-    <!-- Bootstrap + Meyawo main styles -->
+    <link rel="icon" type="image/x-icon" href="assets/svg/icona.ico">
 	<link rel="stylesheet" href="assets/css/meyawo.css">
+
+
+
+    <!-- Descrizioni delle sezioni -->
+
+    <!-- Home -->
+    <meta name="description" content="Benvenuti nel sito della Dott.ssa Morena Galizia, psicologa clinica specializzata in terapia per ansia, umore, relazioni, e consapevolezza personale. Contattami per iniziare un percorso di supporto psicologico a Bologna.">
+
+    <!-- Chi sono -->
+    <meta name="description" content="Dott.ssa Morena Galizia - Psicologa clinica a Bologna, con esperienza in psicologia della salute e supporto per patologie croniche e disturbi alimentari. Scopri di più sulla mia formazione e approccio terapeutico.">
+
+    <!-- Servizi -->
+    <meta name="description" content="Affronta ansia, umore, autostima e relazioni con il supporto psicologico della Dott.ssa Morena Galizia a Bologna. Scopri come posso aiutarti a migliorare il rapporto con te stesso e le tue emozioni.">
+
+    <!-- Testimonianze -->
+    <meta name="description" content="Leggi le recensioni dei pazienti della Dott.ssa Morena Galizia, psicologa clinica a Bologna. Scopri cosa dicono del mio approccio e delle esperienze positive dei miei clienti.">
+
+    <!-- Contatti -->
+    <meta name="description" content="Contatta la Dott.ssa Morena Galizia per informazioni o per prenotare una consulenza. Il mio studio si trova a Bologna, in Via dell’Indipendenza. Sono qui per rispondere alle tue domande e offrirti il supporto necessario.">
+
 </head>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // https://dashboard.emailjs.com/admin/account
+            emailjs.init({
+              publicKey: "-U4nc04zlgy1eOBO-",
+            });
+        })();
+    </script>
+    <script type="text/javascript">
+        window.onload = function() {
+            document.getElementById('contact-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                // these IDs from the previous steps
+                emailjs.sendForm("service_sfrzv76","template_dff3zte", this).then(() => {
+                        console.log('Messaggio Inviato!');
+                    }, (error) => {
+                        console.log('Errore...');
+                    });
+                emailjs.sendForm("service_sfrzv76","template_ybqz3nx", this)
+                    .then(() => {
+                        alert('Messaggio Inviato!');
+                    }, (error) => {
+                        alert('Errore...');
+                    });
+            });
+        }
+    </script>
+
+
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
     <!-- Page Navbar -->
@@ -250,7 +301,7 @@
                     <p class="section-subtitle">Come posso comunicare?</p>
                     <h6 class="section-title mb-5">Contattami</h6>
                     <!-- contact form -->
-                    <form action="process_form.php" method="POST" class="contact-form col-md-10 col-lg-8 m-auto">
+                    <form id="contact-form" class="contact-form col-md-10 col-lg-8 m-auto">
                         <div class="form-row">
                             <div class="form-group col-sm-6">
                                 <input type="text" name="name" size="50" class="form-control" placeholder="Il tuo nome" required>
