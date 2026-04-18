@@ -40,6 +40,8 @@ function Hero() {
       <h1 className="text-5xl font-bold z-10">
         Francesco Milione
       </h1>
+      <h2 className="text-xl z-10">
+        visit my site      </h2>
     </section>
   )
 }
