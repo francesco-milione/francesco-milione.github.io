@@ -24,17 +24,17 @@ function ParallaxBackground() {
     </div>
   )
 }
-function Section() {
+function Section({ id, label }: { id: string; label: string }) {
   return (
-    <section className="h-screen flex items-center justify-center">
-      <p className="text-2xl opacity-70">Scrolla...</p>
+    <section id={id} className="h-screen flex items-center justify-center">
+      <p className="text-2xl opacity-70">{label}</p>
     </section>
   )
 }
 
 function Hero() {
   return (
-    <section className="h-screen flex items-center justify-center relative overflow-hidden">
+    <section id="home" className="h-screen flex items-center justify-center relative overflow-hidden p-4">
       <ParallaxBackground />
 
       <h1 className="text-5xl font-bold z-10">
@@ -62,9 +62,9 @@ function App() {
 
       <Hero />
 
-      <Section />
+      <Section id="projects" label="Projects" />
 
-      <Section />
+      <Section id="contact" label="Contact" />
     </div>
   )
 }
