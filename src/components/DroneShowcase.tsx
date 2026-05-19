@@ -8,11 +8,15 @@ const overlayTexts = [
   { from: 0.82, to: 1, title: 'Drone Cinematography', sub: 'Tecnica, passione e visione' },
 ]
 
+const isAndroid = /Android/i.test(navigator.userAgent)
+
 export const DroneShowcase = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const mouseXRef = useRef(0.5)
   const videoUnlockedRef = useRef(false)
+  const scrubReadyRef = useRef(false)
+  const containerTopRef = useRef(0)
   const [videoReady, setVideoReady] = useState(false)
 
   const { scrollYProgress } = useScroll({
@@ -20,35 +24,52 @@ export const DroneShowcase = () => {
     offset: ['start start', 'end end'],
   })
 
-  // Forza il caricamento del video su iOS (non aspetta un gesto utente)
+  // Calcola l'offset del container una volta sola (stabile durante lo scroll)
   useEffect(() => {
+    const update = () => {
+      if (containerRef.current)
+        containerTopRef.current = containerRef.current.getBoundingClientRect().top + window.scrollY
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
+  // Su Android il video gira in autoplay/loop fluido — niente scrubbing
+  // Su iOS/desktop: forza il caricamento e sblocca il seeking con play()+pause()
+  useEffect(() => {
+    if (isAndroid) { setVideoReady(true); return }
     videoRef.current?.load()
   }, [])
 
-  // Scroll + touchmove → video scrubbing (desktop + mobile)
+  // Blocca re-play dopo l'unlock (iOS/desktop)
   useEffect(() => {
+    if (isAndroid) return
+    const video = videoRef.current
+    if (!video) return
+    const stopPlay = () => { if (scrubReadyRef.current) video.pause() }
+    video.addEventListener('play', stopPlay)
+    return () => video.removeEventListener('play', stopPlay)
+  }, [])
+
+  // Scroll scrubbing — solo su iOS/desktop
+  useEffect(() => {
+    if (isAndroid) return
     let rafId: number | null = null
 
     const scrub = () => {
       rafId = null
-      const container = containerRef.current
       const video = videoRef.current
-      if (!container || !video || !video.duration || isNaN(video.duration)) return
-      if (video.readyState < 2) return
+      if (!video || !video.duration || isNaN(video.duration) || video.readyState < 2) return
 
-      // scrollY + offsetTop è affidabile su Android (getBoundingClientRect è stale durante il compositor scroll)
-      const scrolled = window.scrollY - container.offsetTop
-      const scrollable = container.offsetHeight - window.innerHeight
+      const scrolled = window.scrollY - containerTopRef.current
+      const scrollable = (containerRef.current?.offsetHeight ?? 0) - window.innerHeight
       const progress = Math.max(0, Math.min(1, scrolled / scrollable))
-
       const mouseOffset = (mouseXRef.current - 0.5) * 0.08
-      const targetTime = (progress + mouseOffset) * video.duration
-      video.currentTime = Math.max(0, Math.min(video.duration, targetTime))
+      video.currentTime = Math.max(0, Math.min(video.duration, (progress + mouseOffset) * video.duration))
     }
 
-    const scheduleUpdate = () => {
-      if (rafId === null) rafId = requestAnimationFrame(scrub)
-    }
+    const scheduleUpdate = () => { if (rafId === null) rafId = requestAnimationFrame(scrub) }
 
     window.addEventListener('scroll', scheduleUpdate, { passive: true })
     window.addEventListener('touchmove', scheduleUpdate, { passive: true })
@@ -59,7 +80,7 @@ export const DroneShowcase = () => {
     }
   }, [])
 
-  // Mouse X
+  // Mouse X (desktop)
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -71,9 +92,9 @@ export const DroneShowcase = () => {
     return () => el.removeEventListener('mousemove', onMove)
   }, [])
 
-  // Sblocca il seeking su iOS Safari con play()+pause()
-  // Usa un ref come guard per evitare la race condition tra onLoadedMetadata e onCanPlay
+  // Unlock seeking iOS/desktop
   const handleVideoLoad = useCallback(() => {
+    if (isAndroid) return
     const video = videoRef.current
     if (!video || videoUnlockedRef.current) return
     videoUnlockedRef.current = true
@@ -81,9 +102,11 @@ export const DroneShowcase = () => {
     video.play().then(() => {
       video.pause()
       video.currentTime = 0
+      scrubReadyRef.current = true
       setVideoReady(true)
     }).catch(() => {
       video.currentTime = 0
+      scrubReadyRef.current = true
       setVideoReady(true)
     })
   }, [])
@@ -112,6 +135,7 @@ export const DroneShowcase = () => {
           muted
           playsInline
           autoPlay
+          loop={isAndroid}
           preload="auto"
           onLoadedMetadata={handleVideoLoad}
           onCanPlay={handleVideoLoad}
