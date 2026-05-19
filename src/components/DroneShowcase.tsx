@@ -103,6 +103,7 @@ export const DroneShowcase = () => {
           src="/videos/drone.mp4"
           muted
           playsInline
+          autoPlay
           preload="auto"
           onLoadedMetadata={handleVideoLoad}
           onCanPlay={handleVideoLoad}
