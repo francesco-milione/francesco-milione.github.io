@@ -12,6 +12,7 @@ export const DroneShowcase = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const mouseXRef = useRef(0.5)
+  const videoUnlockedRef = useRef(false)
   const [videoReady, setVideoReady] = useState(false)
 
   const { scrollYProgress } = useScroll({
@@ -19,12 +20,18 @@ export const DroneShowcase = () => {
     offset: ['start start', 'end end'],
   })
 
-  // Scroll → video scrubbing (desktop + mobile)
+  // Forza il caricamento del video su iOS (non aspetta un gesto utente)
+  useEffect(() => {
+    videoRef.current?.load()
+  }, [])
+
+  // Scroll + touchmove → video scrubbing (desktop + mobile)
   useEffect(() => {
     const updateVideo = () => {
       const container = containerRef.current
       const video = videoRef.current
       if (!container || !video || !video.duration || isNaN(video.duration)) return
+      if (video.readyState < 2) return // HAVE_CURRENT_DATA
 
       const rect = container.getBoundingClientRect()
       const scrollable = container.offsetHeight - window.innerHeight
@@ -37,7 +44,11 @@ export const DroneShowcase = () => {
     }
 
     window.addEventListener('scroll', updateVideo, { passive: true })
-    return () => window.removeEventListener('scroll', updateVideo)
+    window.addEventListener('touchmove', updateVideo, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', updateVideo)
+      window.removeEventListener('touchmove', updateVideo)
+    }
   }, [])
 
   // Mouse X
@@ -52,18 +63,22 @@ export const DroneShowcase = () => {
     return () => el.removeEventListener('mousemove', onMove)
   }, [])
 
+  // Sblocca il seeking su iOS Safari con play()+pause()
+  // Usa un ref come guard per evitare la race condition tra onLoadedMetadata e onCanPlay
   const handleVideoLoad = useCallback(() => {
     const video = videoRef.current
-    if (!video || videoReady) return
-    // play() + pause() immediato sblocca il seeking su iOS Safari
+    if (!video || videoUnlockedRef.current) return
+    videoUnlockedRef.current = true
+
     video.play().then(() => {
       video.pause()
       video.currentTime = 0
+      setVideoReady(true)
     }).catch(() => {
       video.currentTime = 0
+      setVideoReady(true)
     })
-    setVideoReady(true)
-  }, [videoReady])
+  }, [])
 
   return (
     <section id="drone" ref={containerRef} className="relative" style={{ height: '400vh' }}>
@@ -88,8 +103,6 @@ export const DroneShowcase = () => {
           src="/videos/drone.mp4"
           muted
           playsInline
-          autoPlay
-          loop
           preload="auto"
           onLoadedMetadata={handleVideoLoad}
           onCanPlay={handleVideoLoad}
