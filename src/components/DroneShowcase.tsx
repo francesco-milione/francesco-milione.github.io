@@ -27,15 +27,18 @@ export const DroneShowcase = () => {
 
   // Scroll + touchmove → video scrubbing (desktop + mobile)
   useEffect(() => {
-    const updateVideo = () => {
+    let rafId: number | null = null
+
+    const scrub = () => {
+      rafId = null
       const container = containerRef.current
       const video = videoRef.current
       if (!container || !video || !video.duration || isNaN(video.duration)) return
-      if (video.readyState < 2) return // HAVE_CURRENT_DATA
+      if (video.readyState < 2) return
 
-      const rect = container.getBoundingClientRect()
+      // scrollY + offsetTop è affidabile su Android (getBoundingClientRect è stale durante il compositor scroll)
+      const scrolled = window.scrollY - container.offsetTop
       const scrollable = container.offsetHeight - window.innerHeight
-      const scrolled = -rect.top
       const progress = Math.max(0, Math.min(1, scrolled / scrollable))
 
       const mouseOffset = (mouseXRef.current - 0.5) * 0.08
@@ -43,11 +46,16 @@ export const DroneShowcase = () => {
       video.currentTime = Math.max(0, Math.min(video.duration, targetTime))
     }
 
-    window.addEventListener('scroll', updateVideo, { passive: true })
-    window.addEventListener('touchmove', updateVideo, { passive: true })
+    const scheduleUpdate = () => {
+      if (rafId === null) rafId = requestAnimationFrame(scrub)
+    }
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true })
+    window.addEventListener('touchmove', scheduleUpdate, { passive: true })
     return () => {
-      window.removeEventListener('scroll', updateVideo)
-      window.removeEventListener('touchmove', updateVideo)
+      window.removeEventListener('scroll', scheduleUpdate)
+      window.removeEventListener('touchmove', scheduleUpdate)
+      if (rafId !== null) cancelAnimationFrame(rafId)
     }
   }, [])
 

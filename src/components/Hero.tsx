@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 
-const words = ['Francesco', 'Milione', 'v1.0']
+const words = ['Francesco', 'Milione', 'v1.1']
 
 const containerVariants = {
   hidden: {},
