@@ -1,8 +1,8 @@
-import { motion, useScroll, useTransform, useMotionValueEvent, type MotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { useRef, useEffect, useState } from 'react'
 
 const overlayTexts = [
-  { from: 0, to: 0.28, title: 'Il Mondo Dall\'Alto', sub: 'Ogni volo è una prospettiva nuova' },
+  { from: 0, to: 0.28, title: "Il Mondo Dall'Alto", sub: 'Ogni volo è una prospettiva nuova' },
   { from: 0.28, to: 0.55, title: 'Frame Perfetti', sub: 'Cinematografia aerea di precisione' },
   { from: 0.55, to: 0.82, title: 'Storie dal Cielo', sub: 'Luoghi visti come mai prima' },
   { from: 0.82, to: 1, title: 'Drone Cinematography', sub: 'Tecnica, passione e visione' },
@@ -11,7 +11,7 @@ const overlayTexts = [
 export const DroneShowcase = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const sectionMouseX = useRef(0)
+  const mouseXRef = useRef(0.5)
   const [videoReady, setVideoReady] = useState(false)
 
   const { scrollYProgress } = useScroll({
@@ -19,43 +19,49 @@ export const DroneShowcase = () => {
     offset: ['start start', 'end end'],
   })
 
-  // Drive video currentTime from scroll
-  useMotionValueEvent(scrollYProgress, 'change', progress => {
-    const video = videoRef.current
-    if (!video || !video.duration || isNaN(video.duration)) return
-    const targetTime = progress * video.duration
-    // Add slight mouse X influence (±1.5s)
-    const mouseInfluence = (sectionMouseX.current - 0.5) * 3
-    video.currentTime = Math.max(0, Math.min(video.duration, targetTime + mouseInfluence * 0.1))
-  })
+  // RAF-based scroll→video sync: more reliable than useMotionValueEvent
+  useEffect(() => {
+    let rafId: number
 
-  // Track mouse X relative position in section
+    const update = () => {
+      const video = videoRef.current
+      if (video && video.duration && !isNaN(video.duration)) {
+        const progress = scrollYProgress.get()
+        const mouseOffset = (mouseXRef.current - 0.5) * 0.1
+        const targetTime = (progress + mouseOffset) * video.duration
+        video.currentTime = Math.max(0, Math.min(video.duration, targetTime))
+      }
+      rafId = requestAnimationFrame(update)
+    }
+
+    rafId = requestAnimationFrame(update)
+    return () => cancelAnimationFrame(rafId)
+  }, [scrollYProgress])
+
+  // Track mouse X within section
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
     const onMove = (e: MouseEvent) => {
       const rect = el.getBoundingClientRect()
-      sectionMouseX.current = (e.clientX - rect.left) / rect.width
+      mouseXRef.current = (e.clientX - rect.left) / rect.width
     }
     el.addEventListener('mousemove', onMove)
     return () => el.removeEventListener('mousemove', onMove)
   }, [])
 
-  // Overlay text opacity transforms
-  const textProgress = scrollYProgress
-
   return (
     <section id="drone" ref={containerRef} className="relative" style={{ height: '400vh' }}>
-      {/* Sticky viewport */}
       <div className="sticky top-0 h-screen overflow-hidden">
-        {/* Fallback gradient (shown while video loads or on error) */}
+
+        {/* Fallback gradient while video loads */}
         <div
           className="absolute inset-0"
           style={{
             background:
               'radial-gradient(ellipse 80% 60% at 30% 40%, rgba(0,212,255,0.18) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 70% 60%, rgba(168,85,247,0.15) 0%, transparent 60%), var(--color-bg)',
             opacity: videoReady ? 0 : 1,
-            transition: 'opacity 0.6s ease',
+            transition: 'opacity 0.8s ease',
           }}
         />
 
@@ -63,7 +69,7 @@ export const DroneShowcase = () => {
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ opacity: videoReady ? 1 : 0, transition: 'opacity 0.6s ease' }}
+          style={{ opacity: videoReady ? 1 : 0, transition: 'opacity 0.8s ease' }}
           src="/videos/drone.mp4"
           muted
           playsInline
@@ -72,7 +78,7 @@ export const DroneShowcase = () => {
           onCanPlay={() => setVideoReady(true)}
         />
 
-        {/* Dark vignette */}
+        {/* Vignette */}
         <div
           className="absolute inset-0"
           style={{
@@ -81,7 +87,7 @@ export const DroneShowcase = () => {
           }}
         />
 
-        {/* Top/bottom gradient fade */}
+        {/* Top/bottom fade */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -90,26 +96,15 @@ export const DroneShowcase = () => {
           }}
         />
 
-        {/* Section label */}
-        <motion.div
-          className="absolute top-16 left-8 md:left-16"
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <span
-            className="text-xs font-medium tracking-[0.3em] uppercase"
-            style={{ color: 'var(--color-accent)' }}
-          >
+        {/* Label */}
+        <div className="absolute top-16 left-8 md:left-16">
+          <span className="text-xs font-medium tracking-[0.3em] uppercase" style={{ color: 'var(--color-accent)' }}>
             Drone Cinematography
           </span>
-        </motion.div>
+        </div>
 
         {/* Scroll hint */}
-        <div
-          className="absolute top-16 right-8 md:right-16 flex items-center gap-2 opacity-50"
-        >
+        <div className="absolute top-16 right-8 md:right-16 flex items-center gap-2 opacity-50">
           <span className="text-xs tracking-widest uppercase" style={{ color: 'var(--color-text-muted)' }}>
             scroll to fly
           </span>
@@ -124,7 +119,7 @@ export const DroneShowcase = () => {
             className="h-full origin-left"
             style={{
               background: 'linear-gradient(90deg, var(--color-accent), var(--color-purple))',
-              scaleX: textProgress,
+              scaleX: scrollYProgress,
             }}
           />
         </div>
@@ -133,7 +128,7 @@ export const DroneShowcase = () => {
         {overlayTexts.map((item, i) => (
           <OverlayText
             key={i}
-            progress={textProgress}
+            progress={scrollYProgress}
             from={item.from}
             to={item.to}
             title={item.title}
