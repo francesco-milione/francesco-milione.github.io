@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 
 const overlayTexts = [
   { from: 0, to: 0.28, title: "Il Mondo Dall'Alto", sub: 'Ogni volo è una prospettiva nuova' },
@@ -14,13 +14,12 @@ export const DroneShowcase = () => {
   const mouseXRef = useRef(0.5)
   const [videoReady, setVideoReady] = useState(false)
 
-  // Framer Motion scroll — usato solo per le animazioni testo
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   })
 
-  // Scroll listener diretto per il video scrubbing
+  // Scroll → video scrubbing (desktop + mobile)
   useEffect(() => {
     const updateVideo = () => {
       const container = containerRef.current
@@ -53,11 +52,18 @@ export const DroneShowcase = () => {
     return () => el.removeEventListener('mousemove', onMove)
   }, [])
 
-  const handleVideoLoad = () => {
+  const handleVideoLoad = useCallback(() => {
     const video = videoRef.current
-    if (video) video.currentTime = 0
+    if (!video || videoReady) return
+    // play() + pause() immediato sblocca il seeking su iOS Safari
+    video.play().then(() => {
+      video.pause()
+      video.currentTime = 0
+    }).catch(() => {
+      video.currentTime = 0
+    })
     setVideoReady(true)
-  }
+  }, [videoReady])
 
   return (
     <section id="drone" ref={containerRef} className="relative" style={{ height: '400vh' }}>
@@ -82,8 +88,11 @@ export const DroneShowcase = () => {
           src="/videos/drone.mp4"
           muted
           playsInline
+          autoPlay
+          loop
           preload="auto"
           onLoadedMetadata={handleVideoLoad}
+          onCanPlay={handleVideoLoad}
         />
 
         {/* Vignette */}
