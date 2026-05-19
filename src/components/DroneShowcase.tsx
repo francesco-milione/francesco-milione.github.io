@@ -14,31 +14,34 @@ export const DroneShowcase = () => {
   const mouseXRef = useRef(0.5)
   const [videoReady, setVideoReady] = useState(false)
 
+  // Framer Motion scroll — usato solo per le animazioni testo
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   })
 
-  // RAF-based scroll→video sync: more reliable than useMotionValueEvent
+  // Scroll listener diretto per il video scrubbing
   useEffect(() => {
-    let rafId: number
-
-    const update = () => {
+    const updateVideo = () => {
+      const container = containerRef.current
       const video = videoRef.current
-      if (video && video.duration && !isNaN(video.duration)) {
-        const progress = scrollYProgress.get()
-        const mouseOffset = (mouseXRef.current - 0.5) * 0.1
-        const targetTime = (progress + mouseOffset) * video.duration
-        video.currentTime = Math.max(0, Math.min(video.duration, targetTime))
-      }
-      rafId = requestAnimationFrame(update)
+      if (!container || !video || !video.duration || isNaN(video.duration)) return
+
+      const rect = container.getBoundingClientRect()
+      const scrollable = container.offsetHeight - window.innerHeight
+      const scrolled = -rect.top
+      const progress = Math.max(0, Math.min(1, scrolled / scrollable))
+
+      const mouseOffset = (mouseXRef.current - 0.5) * 0.08
+      const targetTime = (progress + mouseOffset) * video.duration
+      video.currentTime = Math.max(0, Math.min(video.duration, targetTime))
     }
 
-    rafId = requestAnimationFrame(update)
-    return () => cancelAnimationFrame(rafId)
-  }, [scrollYProgress])
+    window.addEventListener('scroll', updateVideo, { passive: true })
+    return () => window.removeEventListener('scroll', updateVideo)
+  }, [])
 
-  // Track mouse X within section
+  // Mouse X
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -50,11 +53,17 @@ export const DroneShowcase = () => {
     return () => el.removeEventListener('mousemove', onMove)
   }, [])
 
+  const handleVideoLoad = () => {
+    const video = videoRef.current
+    if (video) video.currentTime = 0
+    setVideoReady(true)
+  }
+
   return (
     <section id="drone" ref={containerRef} className="relative" style={{ height: '400vh' }}>
       <div className="sticky top-0 h-screen overflow-hidden">
 
-        {/* Fallback gradient while video loads */}
+        {/* Fallback gradient */}
         <div
           className="absolute inset-0"
           style={{
@@ -74,16 +83,14 @@ export const DroneShowcase = () => {
           muted
           playsInline
           preload="auto"
-          onLoadedMetadata={() => setVideoReady(true)}
-          onCanPlay={() => setVideoReady(true)}
+          onLoadedMetadata={handleVideoLoad}
         />
 
         {/* Vignette */}
         <div
           className="absolute inset-0"
           style={{
-            background:
-              'radial-gradient(ellipse 100% 100% at 50% 50%, transparent 30%, rgba(8,8,16,0.85) 100%)',
+            background: 'radial-gradient(ellipse 100% 100% at 50% 50%, transparent 30%, rgba(8,8,16,0.85) 100%)',
           }}
         />
 
@@ -91,8 +98,7 @@ export const DroneShowcase = () => {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background:
-              'linear-gradient(to bottom, var(--color-bg) 0%, transparent 12%, transparent 88%, var(--color-bg) 100%)',
+            background: 'linear-gradient(to bottom, var(--color-bg) 0%, transparent 12%, transparent 88%, var(--color-bg) 100%)',
           }}
         />
 
@@ -141,11 +147,7 @@ export const DroneShowcase = () => {
 }
 
 function OverlayText({
-  progress,
-  from,
-  to,
-  title,
-  sub,
+  progress, from, to, title, sub,
 }: {
   progress: MotionValue<number>
   from: number
