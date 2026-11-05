@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["6CG36YW849.com.francescomilione.TimerLift"],
+        "components": [
+          { "/": "/start*" }
+        ]
+      }
+    ]
+  }
+}
