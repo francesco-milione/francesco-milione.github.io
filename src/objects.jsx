@@ -1,6 +1,6 @@
 // Versioni "grandi" degli oggetti dello scaffale, mostrate quando li apri.
 import { motion, AnimatePresence } from 'framer-motion'
-import { INK, PAPER, GREEN, GREEN2, ORANGE, ORANGE2, SOFT } from './art.jsx'
+import { INK, PAPER, GREEN, GREEN2, ORANGE, ORANGE2, SOFT, TelephoneArt } from './art.jsx'
 
 const MONO = 'DM Mono, monospace'
 const SANS = 'Space Grotesk, system-ui, sans-serif'
@@ -207,31 +207,24 @@ export const URLS = { coin: 'registro-incassi', key: 'trova-chiave', trophy: 'fa
 // ── Telefono fisso: la cornetta si alza ─────────────────────
 export function BigTelephone() {
   return (
-    <svg viewBox="-24 0 468 320" role="img" aria-label="Telefono" style={{ overflow: "visible" }}>
-      <path d="M26 290 L394 290 L334 170 L86 170 Z" fill={INK} stroke={INK} strokeWidth="14" strokeLinejoin="round" />
-      <circle cx="210" cy="228" r="66" fill={PAPER} />
-      <circle cx="210" cy="228" r="26" fill={INK} />
-      <circle cx="210" cy="228" r="8" fill={ORANGE} />
-      {Array.from({ length: 10 }).map((_, i) => {
-        const a = (i / 10) * Math.PI * 2 - Math.PI / 2
-        return <circle key={i} cx={210 + Math.cos(a) * 46} cy={228 + Math.sin(a) * 46} r="6.5" fill={INK} />
-      })}
-      <rect x="118" y="132" width="18" height="44" fill={INK} />
-      <rect x="284" y="132" width="18" height="44" fill={INK} />
-      <motion.g
-        initial={{ y: 0, rotate: 0 }}
-        animate={{ y: [0, 0, 0, 0, -46], rotate: [0, -1.6, 1.6, -1.6, -6] }}
-        transition={{ duration: 1.7, times: [0, 0.18, 0.36, 0.54, 1], ease: 'easeInOut', delay: 0.4 }}
-      >
-        <rect x="64" y="86" width="292" height="40" rx="20" fill={INK} />
-        <rect x="34" y="72" width="80" height="56" rx="26" fill={INK} />
-        <rect x="306" y="72" width="80" height="56" rx="26" fill={INK} />
-      </motion.g>
+    <svg viewBox="-24 0 468 320" role="img" aria-label="Telefono" style={{ overflow: 'visible' }}>
+      <g transform="translate(210 296) scale(2.55)">
+        <TelephoneArt
+          handset={(c) => (
+            <motion.g
+              initial={{ y: 0, rotate: 0 }}
+              animate={{ y: [0, 0, 0, 0, -18], rotate: [0, -1.6, 1.6, -1.6, -6] }}
+              transition={{ duration: 1.7, times: [0, 0.18, 0.36, 0.54, 1], ease: 'easeInOut', delay: 0.4 }}
+            >
+              {c}
+            </motion.g>
+          )}
+        />
+      </g>
       <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.1 }} stroke={ORANGE} strokeWidth="5" strokeLinecap="round" fill="none">
-        <path d="M24 36 q-12 14 0 28" />
-        <path d="M10 28 q-20 22 0 44" />
+        <path d="M24 72 q-12 14 0 28" />
+        <path d="M10 64 q-20 22 0 44" />
       </motion.g>
-      <circle cx="338" cy="262" r="6" fill={ORANGE} />
     </svg>
   )
 }

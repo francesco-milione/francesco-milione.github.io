@@ -4,7 +4,7 @@
 // ─────────────────────────────────────────────────────────────
 
 // Per usare la tua foto vera: metti il file in /public (es. me.jpg) e scrivi '/me.jpg'
-export const PHOTO = null
+export const PHOTO = `${import.meta.env.BASE_URL}portrait.webp`
 
 // piccolo helper: sceglie la lingua da un oggetto {it, en}
 export const tr = (v, lang) => (v && typeof v === 'object' && 'it' in v ? v[lang] : v)
@@ -62,6 +62,9 @@ export const labels = {
   lamp: { it: 'Lampada', en: 'Lamp' },
   lampOn: { it: 'Accendi la luce', en: 'Turn on the light' },
   lampOff: { it: 'Spegni la luce', en: 'Turn off the light' },
+  insta: { it: 'Instagram', en: 'Instagram' },
+  mug: { it: 'Caffè', en: 'Coffee' },
+  lampBroken: { it: 'Lampadina fulminata…', en: 'Bulb blown…' },
 }
 
 // ── CHI SONO ────────────────────────────────────────────────
@@ -103,21 +106,13 @@ export const about = {
 }
 
 // ── FORMAZIONE ──────────────────────────────────────────────
+// in ordine cronologico: il pannello si apre sull'ultima voce (la laurea magistrale)
 export const edu = {
   title: { it: 'Formazione', en: 'Education' },
   items: [
     {
-      id: 'diploma',
-      head: 'ISTITUTO TECNICO · LAURIA',
-      lines: ['ITIS ENZO', 'FERRARI'],
-      diploma: { it: 'DIPLOMA', en: 'HIGH SCHOOL DIPLOMA' },
-      course: { it: 'Indirizzo Informatica (TIC)', en: 'Computer science (ICT)' },
-      year: '2014 – 2019 · 100/100',
-      thesis: { it: 'Lauria (PZ)', en: 'Lauria (PZ)' },
-      level: 1,
-    },
-    {
       id: 'olimpiadi',
+      tl: { year: '', name: { it: 'Olimpiadi', en: 'Olympiad' } },
       head: 'MINISTERO DELL’ISTRUZIONE',
       lines: ['OLIMPIADI DI', 'INFORMATICA'],
       diploma: { it: 'ATTESTATO', en: 'CERTIFICATE' },
@@ -127,7 +122,30 @@ export const edu = {
       level: 2,
     },
     {
+      id: 'diploma',
+      tl: { year: '2019', name: { it: 'Diploma', en: 'Diploma' } },
+      head: 'ISTITUTO TECNICO · LAURIA',
+      lines: ['ITIS ENZO', 'FERRARI'],
+      diploma: { it: 'DIPLOMA', en: 'HIGH SCHOOL DIPLOMA' },
+      course: { it: 'Indirizzo Informatica (TIC)', en: 'Computer science (ICT)' },
+      year: '2014 – 2019 · 100/100',
+      thesis: { it: 'Lauria (PZ)', en: 'Lauria (PZ)' },
+      level: 1,
+    },
+    {
+      id: 'inglese',
+      tl: { year: '', name: { it: 'Inglese B2', en: 'English B2' } },
+      head: 'QCER · QUADRO EUROPEO',
+      lines: ['INGLESE', 'LIVELLO B2'],
+      diploma: { it: 'LINGUA', en: 'LANGUAGE' },
+      course: { it: 'Livello intermedio', en: 'Upper intermediate' },
+      year: { it: 'B2 in tutte le competenze', en: 'B2 in every skill' },
+      thesis: { it: 'Ascolto · Lettura · Parlato · Scrittura', en: 'Listening · Reading · Speaking · Writing' },
+      level: 1,
+    },
+    {
       id: 'triennale',
+      tl: { year: '2022', name: { it: 'Triennale', en: 'Bachelor' } },
       diploma: { it: 'LAUREA TRIENNALE', en: 'BACHELOR’S DEGREE' },
       course: { it: 'Ingegneria Informatica', en: 'Computer Engineering' },
       level: 1,
@@ -139,6 +157,7 @@ export const edu = {
     },
     {
       id: 'magistrale',
+      tl: { year: '2025', name: { it: 'Magistrale', en: 'Master' } },
       diploma: { it: 'LAUREA MAGISTRALE', en: 'MASTER’S DEGREE' },
       course: { it: 'Ingegneria Informatica', en: 'Computer Engineering' },
       level: 2,
@@ -147,16 +166,6 @@ export const edu = {
         it: 'Tesi: Migrazione di applicazioni in ambienti 5G federati Multi-access Edge Computing (MEC)',
         en: 'Thesis: Application migration in federated 5G Multi-access Edge Computing (MEC) environments',
       },
-    },
-    {
-      id: 'inglese',
-      head: 'QCER · QUADRO EUROPEO',
-      lines: ['INGLESE', 'LIVELLO B2'],
-      diploma: { it: 'LINGUA', en: 'LANGUAGE' },
-      course: { it: 'Livello intermedio', en: 'Upper intermediate' },
-      year: { it: 'B2 in tutte le competenze', en: 'B2 in every skill' },
-      thesis: { it: 'Ascolto · Lettura · Parlato · Scrittura', en: 'Listening · Reading · Speaking · Writing' },
-      level: 1,
     },
   ],
 }
@@ -314,29 +323,17 @@ export const projects = {
 // ── LIBRI = COMPETENZE ──────────────────────────────────────
 export const books = [
   {
-    id: 'mobile',
+    id: 'dev',
     pattern: 'circle',
-    title: { it: 'Mobile', en: 'Mobile' },
-    sub: { it: 'iOS · watchOS · Android', en: 'iOS · watchOS · Android' },
+    title: { it: 'Mobile & Web', en: 'Mobile & Web' },
+    sub: { it: 'iOS · watchOS · Android · Web', en: 'iOS · watchOS · Android · Web' },
     text: {
-      it: 'App native per iPhone e Apple Watch, curate nei dettagli: animazioni, grafici, integrazione con la salute.',
-      en: 'Native iPhone and Apple Watch apps, polished in the details: animations, charts, health integration.',
+      it: 'App native per iPhone e Apple Watch curate nei dettagli, e web app veloci e pulite, dal prototipo alla messa online.',
+      en: 'Native iPhone and Apple Watch apps polished in the details, and fast, clean web apps, from prototype to launch.',
     },
     groups: [
       { g: 'Apple', items: ['Swift', 'SwiftUI', 'watchOS', 'HealthKit', 'Swift Charts', 'SceneKit', 'Lottie', 'iCloud'] },
       { g: 'Android', items: ['Java'] },
-    ],
-  },
-  {
-    id: 'web',
-    pattern: 'diamond',
-    title: { it: 'Web', en: 'Web' },
-    sub: { it: 'Interfacce e piccoli backend', en: 'Interfaces and small backends' },
-    text: {
-      it: 'Web app veloci e pulite, dal prototipo alla messa online.',
-      en: 'Fast, clean web apps, from prototype to launch.',
-    },
-    groups: [
       { g: 'Front-end', items: ['React', 'Vite', 'Tailwind CSS', 'Material UI', 'Framer Motion'] },
       { g: 'Back-end & deploy', items: ['Node.js', 'Java Servlet', 'EJB', 'PHP', 'Supabase', 'GitHub Pages', 'PWA'] },
       { g: { it: 'Linguaggi', en: 'Languages' }, items: ['JavaScript', 'HTML', 'CSS', 'Java', 'C', 'C++', 'C#'] },
@@ -355,20 +352,6 @@ export const books = [
       { g: '3D', items: ['Blender', 'SceneKit', { it: 'Seminario CINECA', en: 'CINECA workshop' }] },
       { g: { it: 'Teatro', en: 'Theatre' }, items: [{ it: 'Animazioni per gli spettacoli', en: 'Animations for the shows' }, { it: 'Audio 3D', en: '3D audio' }, { it: 'Luci', en: 'Lights' }] },
       { g: 'Video', items: ['DJI Avata 2 (FPV)', 'DaVinci Resolve', 'Lottie'] },
-    ],
-  },
-  {
-    id: 'ai',
-    pattern: 'triangle',
-    title: { it: 'Workflow AI', en: 'AI workflow' },
-    sub: { it: 'Sviluppare con gli agenti', en: 'Building with agents' },
-    text: {
-      it: 'Uso un flusso di sviluppo con più agenti AI dentro l’IDE per andare più veloce senza perdere controllo.',
-      en: 'I use a multi-agent AI development flow inside the IDE to move faster without losing control.',
-    },
-    groups: [
-      { g: { it: 'Strumenti', en: 'Tools' }, items: ['Kiro IDE', { it: 'Sistema multi-agente', en: 'Multi-agent system' }] },
-      { g: { it: 'Studi', en: 'Studies' }, items: [{ it: 'Intelligenza Artificiale', en: 'Artificial Intelligence' }, 'Computer Vision', 'Computer Graphics', 'Multimedia', { it: 'Reti neurali addestrate da me', en: 'Neural nets I trained' }] },
     ],
   },
   {

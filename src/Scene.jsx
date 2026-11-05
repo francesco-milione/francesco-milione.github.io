@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { INK, PAPER, GREEN, GREEN2, ORANGE, ORANGE2, POT, SOFT, Portrait, Pattern } from './art.jsx'
-import { PHOTO, books, labels, tr, ui } from './data.js'
+import { INK, PAPER, GREEN, GREEN2, ORANGE, ORANGE2, POT, SOFT, Portrait, Pattern, TelephoneArt } from './art.jsx'
+import { PHOTO, books, contact, labels, tr, ui } from './data.js'
+
+const INSTA = contact.rows.find((r) => r.label === 'Instagram')
 
 // ── wrapper cliccabile: hover, tastiera, focus ──────────────
 function Hot({ id, x = 0, y = 0, label, onOpen, onHover, hover = { y: -7 }, hoverTr, children }) {
@@ -59,7 +61,42 @@ function useRustle() {
   return [n, poke]
 }
 
-function Plant({ x, y, s = 1, delay = 0, variant = 'round' }) {
+// fiore che spunta quando la pianta viene annaffiata con la tazza
+function Flower() {
+  return (
+    <motion.g initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 220, damping: 11, delay: 0.5 }} style={{ transformBox: 'fill-box', transformOrigin: '50% 100%' }}>
+      <path d="M0 -50 C12 -86 -8 -118 6 -150" stroke={GREEN2} strokeWidth="3" fill="none" strokeLinecap="round" />
+      <ellipse cx="-6" cy="-104" rx="8" ry="4" fill={GREEN} transform="rotate(-30 -6 -104)" />
+      <g transform="translate(6 -156)">
+        {[0, 72, 144, 216, 288].map((a) => (
+          <ellipse key={a} cy="-9" rx="6.5" ry="10" fill="#f39ab0" stroke={INK} strokeWidth="1.6" transform={`rotate(${a})`} />
+        ))}
+        <circle r="6" fill="#ffd45c" stroke={INK} strokeWidth="1.6" />
+      </g>
+    </motion.g>
+  )
+}
+
+function Drops({ k }) {
+  return (
+    <g key={k} pointerEvents="none">
+      {[-14, 0, 14].map((dx, i) => (
+        <motion.path
+          key={i}
+          d="M0 -6 C3 -2 4 1 0 4 C-4 1 -3 -2 0 -6 Z"
+          fill="#7cc0e6"
+          stroke={INK}
+          strokeWidth="1"
+          initial={{ x: dx, y: -120, opacity: 0 }}
+          animate={{ y: [-120, -56], opacity: [0, 1, 1, 0] }}
+          transition={{ duration: 0.7, delay: i * 0.12, ease: 'easeIn' }}
+        />
+      ))}
+    </g>
+  )
+}
+
+function Plant({ x, y, s = 1, delay = 0, variant = 'round', flower = false, watered = 0 }) {
   const [n, poke] = useRustle()
   const leaves =
     variant === 'round'
@@ -86,7 +123,9 @@ function Plant({ x, y, s = 1, delay = 0, variant = 'round' }) {
             <Leaf key={a} a={a} len={len} w={variant === 'round' ? 12 : 7} h={variant === 'round' ? 19 : 24} />
           ))}
         </g>
+        {flower && <Flower />}
       </g>
+      {watered > 0 && <Drops k={watered} />}
       <path d="M-24 -44 L24 -44 L18 0 L-18 0 Z" fill={POT} stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />
       <rect x="-28" y="-52" width="56" height="9" rx="3" fill={POT} stroke={INK} strokeWidth="2.5" />
       <rect x="-76" y="-150" width="152" height="150" fill="transparent" onPointerEnter={poke} onPointerDown={poke} style={{ cursor: 'pointer' }} />
@@ -161,26 +200,29 @@ function Diploma() {
   )
 }
 
-function PhotoFrame() {
+// la cornice segue la stanza (di notte diventa crema), la foto va solo in penombra
+function PhotoFrame({ shades = false }) {
   return (
     <g>
-      <path d="M75 -34 L28 8 M75 -34 L122 8" stroke={INK} strokeWidth="1.5" fill="none" />
-      <circle cx="75" cy="-34" r="3" fill={INK} />
-      <path d="M0 190 V75 A75 75 0 0 1 150 75 V190 Z" fill={INK} />
-      <path d="M6 184 V75 A69 69 0 0 1 144 75 V184 Z" fill={PAPER} />
-      <Portrait photo={PHOTO} />
+      <g filter="url(#night-room)">
+        <path d="M75 -34 L28 8 M75 -34 L122 8" stroke={INK} strokeWidth="1.5" fill="none" />
+        <circle cx="75" cy="-34" r="3" fill={INK} />
+        <path d="M0 190 V75 A75 75 0 0 1 150 75 V190 Z" fill={INK} />
+        <path d="M6 184 V75 A69 69 0 0 1 144 75 V184 Z" fill={PAPER} />
+      </g>
+      <g filter="url(#night-dim)">
+        <Portrait photo={PHOTO} shades={shades} />
+      </g>
     </g>
   )
 }
 
 // ── libri ───────────────────────────────────────────────────
+// una voce per libro, nello stesso ordine di `books` (Mobile & Web, 3D & Video, Lavoro)
 const BOOK_DIMS = [
-  { w: 36, h: 150, dark: true },
-  { w: 42, h: 128, dark: false },
-  { w: 32, h: 166, dark: true },
-  { w: 40, h: 140, dark: false },
+  { w: 44, h: 156, dark: true },
+  { w: 34, h: 166, dark: false },
   { w: 34, h: 156, accent: true },
-  
 ]
 
 function Book({ d, b, lang }) {
@@ -258,7 +300,7 @@ function CatSleep() {
 
 const POSE = { transformBox: 'fill-box', transformOrigin: '50% 100%' }
 
-function Cat({ purr, lang, poke }) {
+function Cat({ purr, lang, poke, swat = 0 }) {
   const [pose, setPose] = useState('sleep')
   useEffect(() => {
     if (pose !== 'sit') return
@@ -281,6 +323,13 @@ function Cat({ purr, lang, poke }) {
       <motion.g style={POSE} initial={false} animate={{ opacity: sit ? 1 : 0, scaleY: sit ? 1 : 0.8, y: sit ? 0 : 4 }} transition={{ type: 'spring', stiffness: 260, damping: 14 }}>
         <CatSit />
       </motion.g>
+      {/* zampata: allunga la zampa verso il portapenne */}
+      {swat > 0 && (
+        <motion.g key={swat} initial={{ x: 0, opacity: 0 }} animate={{ x: [0, -74, -74, 0], opacity: [0, 1, 1, 0] }} transition={{ duration: 0.85, times: [0, 0.4, 0.62, 1] }}>
+          <rect x="58" y="-30" width="34" height="12" rx="6" fill={ORANGE} />
+          <path d="M62 -27 v6 M67 -27 v6" stroke={ORANGE2} strokeWidth="1.6" strokeLinecap="round" />
+        </motion.g>
+      )}
       <AnimatePresence>
         {purr && (
           <motion.g initial={{ opacity: 0, y: 8, scale: 0.8 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6 }} style={{ transformBox: 'fill-box', transformOrigin: '50% 100%' }}>
@@ -416,7 +465,7 @@ function Watch() {
       </g>
       <g className="w-b">
         <rect x="-27" y="-119" width="54" height="66" rx="15" fill="#fff6f2" />
-        <path className="heart" d="M0 -79 C-14 -90 -10 -101 -3.5 -101 C-1 -101 0 -99 0 -98 C0 -99 1 -101 3.5 -101 C10 -101 14 -90 0 -79 Z" fill={ORANGE} />
+        <path className="heart" d="M0 -77 C-4 -80.5 -11.5 -85.5 -11.5 -91.5 C-11.5 -95.5 -8.6 -98.5 -5.2 -98.5 C-2.8 -98.5 -1 -97.2 0 -95.2 C1 -97.2 2.8 -98.5 5.2 -98.5 C8.6 -98.5 11.5 -95.5 11.5 -91.5 C11.5 -85.5 4 -80.5 0 -77 Z" fill={ORANGE} />
         <text y="-64" textAnchor="middle" fontFamily="DM Mono, monospace" fontSize="10" fontWeight="500" fill={INK}>
           128
         </text>
@@ -428,40 +477,114 @@ function Watch() {
 function Telephone() {
   return (
     <g>
-      <path d="M72 -20 C104 -20 112 -4 96 0" stroke={INK} strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray="1 5.5" />
-      <path d="M-74 0 L74 0 L54 -40 L-54 -40 Z" fill={INK} strokeLinejoin="round" stroke={INK} strokeWidth="6" />
-      <circle cy="-20" r="22" fill={PAPER} />
-      <circle cy="-20" r="9" fill={INK} />
-      {Array.from({ length: 10 }).map((_, i) => {
-        const a = (i / 10) * Math.PI * 2 - Math.PI / 2
-        return <circle key={i} cx={Math.cos(a) * 16} cy={-20 + Math.sin(a) * 16} r="2.2" fill={INK} />
-      })}
-      <g className="tel-handset">
-        <rect x="-76" y="-66" width="152" height="20" rx="10" fill={INK} />
-        <rect x="-82" y="-74" width="34" height="22" rx="11" fill={INK} />
-        <rect x="48" y="-74" width="34" height="22" rx="11" fill={INK} />
-      </g>
+      <TelephoneArt />
       <g className="tel-waves" stroke={ORANGE} strokeWidth="3" strokeLinecap="round" fill="none">
-        <path d="M-92 -80 q-8 8 0 18" />
-        <path d="M-100 -86 q-13 14 0 30" />
-        <path d="M92 -80 q8 8 0 18" />
-        <path d="M100 -86 q13 14 0 30" />
+        <path d="M-90 -76 q-8 8 0 18" />
+        <path d="M-98 -82 q-13 14 0 30" />
+        <path d="M90 -76 q8 8 0 18" />
+        <path d="M98 -82 q13 14 0 30" />
       </g>
-      <circle cx="60" cy="-13" r="3.5" fill={ORANGE} />
     </g>
   )
 }
 
-function Mug() {
+// portapenne accanto al gatto: al quinto clic il gatto lo butta giù
+function PenCup() {
   return (
     <g>
-      <g className="steam">
+      <path d="M-4 -22 L-9 -46 M1 -22 L3 -50 M5 -22 L11 -42" stroke={INK} strokeWidth="3" strokeLinecap="round" />
+      <path d="M-9 -46 l-1.5 -5 M3 -50 l0 -5" stroke={ORANGE} strokeWidth="3" strokeLinecap="round" />
+      <rect x="-11" y="-26" width="22" height="26" rx="3" fill={SOFT} stroke={INK} strokeWidth="2.5" />
+      <path d="M-11 -14 h22" stroke={INK} strokeWidth="1.5" opacity=".4" />
+    </g>
+  )
+}
+
+function Mug({ level = 0 }) {
+  return (
+    <g>
+      <g className="steam" style={{ transform: `scale(${1 + level * 0.35})`, transformOrigin: '0 -40px' }}>
         <path d="M-6 -44 c-6 -8 6 -12 0 -22" stroke={INK} strokeWidth="2.4" fill="none" strokeLinecap="round" opacity=".5" />
         <path d="M6 -44 c-6 -8 6 -12 0 -22" stroke={INK} strokeWidth="2.4" fill="none" strokeLinecap="round" opacity=".5" style={{ animationDelay: '.8s' }} />
+        {level > 0 && <path d="M0 -46 c-6 -8 6 -12 0 -22" stroke={INK} strokeWidth="2.4" fill="none" strokeLinecap="round" opacity=".5" style={{ animationDelay: '.4s' }} />}
       </g>
       <path d="M18 -26 h8 a8 8 0 0 1 0 17 h-8" stroke={INK} strokeWidth="3" fill="none" />
       <rect x="-19" y="-36" width="38" height="36" rx="7" fill="#fff" stroke={INK} strokeWidth="3" />
       <rect x="-19" y="-36" width="38" height="9" rx="4" fill={ORANGE} stroke={INK} strokeWidth="3" />
+    </g>
+  )
+}
+
+// tazza interattiva: clic = un altro caffè, trascinala su una pianta per annaffiarla
+function MugHot({ x, y, level, label, onCoffee, onDrop, onHover }) {
+  const [d, setD] = useState(null) // spostamento durante il trascinamento
+  const drag = useRef(null)
+  const down = (e) => {
+    const svg = e.currentTarget.ownerSVGElement
+    const m = svg.getScreenCTM()
+    drag.current = { sx: e.clientX, sy: e.clientY, k: 1 / m.a, moved: false }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+  const move = (e) => {
+    const g = drag.current
+    if (!g) return
+    const dx = (e.clientX - g.sx) * g.k, dy = (e.clientY - g.sy) * g.k
+    if (!g.moved && Math.hypot(dx, dy) > 6) g.moved = true
+    if (g.moved) setD({ dx, dy })
+  }
+  const up = () => {
+    const g = drag.current
+    drag.current = null
+    if (!g) return
+    if (!g.moved) return onCoffee()
+    if (d) onDrop(x + d.dx, y + d.dy)
+    setD(null)
+  }
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <g
+        className="hot mug-hot"
+        role="button"
+        tabIndex={0}
+        aria-label={label}
+        onPointerDown={down}
+        onPointerMove={move}
+        onPointerUp={up}
+        onPointerCancel={() => { drag.current = null; setD(null) }}
+        onPointerEnter={() => onHover('mug')}
+        onPointerLeave={() => onHover(null)}
+        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onCoffee())}
+        style={{
+          transform: d ? `translate(${d.dx}px, ${d.dy}px) rotate(-28deg)` : 'none',
+          transition: d ? 'none' : 'transform .45s cubic-bezier(.3,1.5,.5,1)',
+          cursor: d ? 'grabbing' : 'grab',
+          touchAction: 'none',
+        }}
+      >
+        <rect x="-26" y="-70" width="60" height="72" fill="transparent" />
+        <Mug level={level} />
+      </g>
+    </g>
+  )
+}
+
+// fotocamera a forma di glifo Instagram: porta al profilo
+function InstaCam() {
+  return (
+    <g>
+      <defs>
+        <linearGradient id="ig-g" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stopColor="#f9c93a" />
+          <stop offset=".45" stopColor="#ec3b78" />
+          <stop offset="1" stopColor="#6a3ad6" />
+        </linearGradient>
+      </defs>
+      <ellipse cy="1" rx="30" ry="3.5" fill={INK} opacity=".14" />
+      <rect x="-29" y="-54" width="58" height="54" rx="15" fill="url(#ig-g)" stroke={INK} strokeWidth="3" />
+      <rect x="-19" y="-44" width="38" height="34" rx="10" fill="none" stroke="#fff" strokeWidth="4" />
+      <circle cy="-27" r="8.5" fill="none" stroke="#fff" strokeWidth="4" />
+      <circle cx="11" cy="-37" r="2.6" fill="#fff" />
+      <rect x="-22" y="-57" width="14" height="5" rx="2" fill={INK} />
     </g>
   )
 }
@@ -576,10 +699,37 @@ function Joint({ x, y, r = 9 }) {
   )
 }
 
-function Lamp({ on }) {
+// post-it attaccato allo stelo: dice cosa fa la lampada
+function PostIt({ on, lang, flip, nudge, s = 1, broken = false }) {
+  const txt = broken ? (lang === 'en' ? 'you broke it' : "l'hai rotta") : on ? (lang === 'en' ? 'lights off' : 'spegnimi') : lang === 'en' ? 'lights on' : 'accendimi'
+  return (
+    <g transform={`translate(${flip ? -12 : 12} -78) scale(${flip ? -s : s} ${s})`} pointerEvents="none">
+      <g className={`postit ${nudge ? 'nudge' : ''}`}>
+        <g transform="rotate(7)">
+          <path d="M4 3 h64 v40 l-10 9 h-54 Z" fill="#000" opacity=".14" />
+          <path d="M0 0 h64 v40 l-10 9 h-54 Z" fill="#ffe27a" />
+          <path d="M54 49 l2 -8 l8 -1 Z" fill="#e8c24f" />
+          <rect x="19" y="-5" width="26" height="10" rx="1.5" fill="#fff" opacity=".55" transform="rotate(-4 32 0)" />
+          <text x="32" y="20" textAnchor="middle" fontFamily="Space Grotesk, sans-serif" fontWeight="700" fontSize="11" fill={INK}>
+            {txt}
+          </text>
+          {/* lampadina scarabocchiata */}
+          <g transform="translate(32 35)" stroke={INK} strokeWidth="1.6" fill={on || broken ? 'none' : ORANGE} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M-4 3 C-9 -1 -7 -9 0 -9 C7 -9 9 -1 4 3 Z" />
+            <path d="M-3 6 H3" fill="none" />
+            {broken ? <path d="M-2 -8 l3 4 l-3 3 l3 4" fill="none" /> : !on && <path d="M-11 -6 l-3 -1 M11 -6 l3 -1 M0 -13 v-3" fill="none" />}
+          </g>
+        </g>
+      </g>
+    </g>
+  )
+}
+
+function Lamp({ on, lang, flip, nudge, noteS, broken = false, flicker = false }) {
+  const lit = on || flicker
   const P = [0, -44], E = [-96, -104], W = [-6, -152], N = [30, -164]
   return (
-    <g style={{ filter: on ? 'url(#unnight)' : undefined }}>
+    <g>
       <defs>
         <linearGradient id="cone-g" gradientUnits="userSpaceOnUse" x1="0" y1="42" x2="0" y2="200">
           <stop offset="0" stopColor="#ffd98a" stopOpacity=".7" />
@@ -610,17 +760,18 @@ function Lamp({ on }) {
       <g transform={`translate(${N[0]} ${N[1]})`}>
         <g className="lamp-nod">
           <g transform="rotate(-22)">
-            {on && <path d="M-30 46 L-96 190 L96 190 L30 46 Z" fill="url(#cone-g)" pointerEvents="none" />}
+            {lit && <path className={flicker ? 'lamp-flicker' : ''} d="M-30 46 L-96 190 L96 190 L30 46 Z" fill="url(#cone-g)" pointerEvents="none" />}
             <rect x="-6" y="-14" width="12" height="14" rx="3" fill="#8d8d98" />
             <path d="M-31 44 C-31 8 -18 -8 0 -8 C18 -8 31 8 31 44 Z" fill={INK} />
             <path d="M-21 36 C-21 20 -15 8 -7 1" stroke="#fff" strokeWidth="3" strokeLinecap="round" fill="none" opacity=".35" />
             <ellipse cy="44" rx="31" ry="9" fill={INK} />
             <ellipse cy="45" rx="26" ry="6.5" fill={on ? '#ffeab0' : '#d9d6dc'} />
-            <circle cy="46" r="8" fill={on ? '#fffbe6' : '#f1eef2'} />
-            {on && <circle cy="48" r="24" fill="url(#glow-g)" pointerEvents="none" />}
+            <circle cy="46" r="8" fill={broken ? '#b9b4bb' : on ? '#fffbe6' : '#f1eef2'} />
+            {lit && <circle className={flicker ? 'lamp-flicker' : ''} cy="48" r="24" fill="url(#glow-g)" pointerEvents="none" />}
           </g>
         </g>
       </g>
+      <PostIt on={on} lang={lang} flip={flip} nudge={nudge} s={noteS} broken={broken} />
     </g>
   )
 }
@@ -683,10 +834,11 @@ const LAYOUTS = {
     ],
     devices: { mobile: [304, 430], web: [385, 700], watch: [640, 700], contact: [770, 700] },
     cat: [858, 430],
-    uprights: [{ at: [376, 430], seq: ['d:26:136:ink', 'b:mobile', 'b:web', 'd:30:118:orange:6', 'b:3d', 'd:22:104:white:3'] }],
+    catToy: [838, 430],
+    uprights: [{ at: [376, 430], seq: ['d:26:136:ink', 'b:dev', 'd:30:118:orange:6', 'b:3d', 'd:22:104:white:3', 'd:28:122:ink'] }],
     flats: [
       { at: [610, 430], len: 96, th: 15, items: ['d:soft', 'd:ink', 'd:orange'], mug: true },
-      { at: [962, 700], len: 120, th: 31, items: ['b:ai', 'b:work'] },
+      { at: [962, 700], len: 120, th: 31, items: ['d:ink', 'b:work'], cam: true },
     ],
     globe: null,
     lamp: [250, 700, 1.1],
@@ -711,20 +863,102 @@ const LAYOUTS = {
     ],
     devices: { mobile: [152, 440], web: [40, 700], watch: [420, 700], contact: [130, 930] },
     cat: [372, 440],
+    catToy: [360, 440],
     uprights: [
-      { at: [204, 440], seq: ['d:26:130:ink', 'b:mobile', 'b:web', 'd:28:110:orange:5'] },
+      { at: [204, 440], seq: ['d:26:130:ink', 'b:dev', 'd:28:110:orange:5', 'd:22:96:white:3'] },
       { at: [268, 700], seq: ['b:3d', 'd:30:118:white:4', 'd:24:98:ink'] },
     ],
-    flats: [{ at: [236, 930], len: 128, th: 30, items: ['b:ai', 'b:work', 'd:soft'], mug: true }],
+    flats: [{ at: [236, 930], len: 128, th: 30, items: ['b:work', 'd:soft'], cam: true, mug: true }],
     globe: null,
     lamp: [496, 930, 0.8],
     wall: { clock: [330, 124, 0.7], goggles: null },
   },
 }
 
+// giro della morte del drone (doppio clic)
+const stuntPath = (narrow) => {
+  const k = narrow ? 0.55 : 1
+  return {
+    x: [0, 180, 320, 260, 0, -260, -320, -180, 0].map((v) => v * k),
+    y: [0, -90, 0, 140, 200, 140, 0, -90, 0].map((v) => v * k),
+    rotate: [0, 20, 60, 140, 180, 220, 300, 340, 360],
+  }
+}
+
+// ── modalità notte ─────────────────────────────────────────
+// La stanza passa a una palette blu notte: i bianchi diventano NIGHT_LO, i tratti scuri NIGHT_HI (crema),
+// i colori mantengono la tinta (inversione + rotazione di 180°). Il quadro va solo in penombra.
+// Le matrici sono interpolate in JS per avere una dissolvenza morbida tra giorno e notte.
+const NIGHT_LO = [0x2a, 0x2e, 0x45].map((v) => v / 255)
+const NIGHT_HI = [0xf1, 0xe7, 0xd5].map((v) => v / 255)
+const HUE180 = [
+  [-0.574, 1.43, 0.144],
+  [0.426, 0.43, 0.144],
+  [0.426, 1.43, -0.856],
+]
+const ROOM = HUE180.map((row, i) => [...row.map((v) => -(NIGHT_HI[i] - NIGHT_LO[i]) * v), NIGHT_HI[i]])
+const DIM = [
+  [0.8, 0, 0, 0],
+  [0, 0.74, 0, 0],
+  [0, 0, 0.7, 0],
+]
+const matrix = (M, t) =>
+  M.map((row, i) => [...[0, 1, 2].map((j) => (1 - t) * (i === j ? 1 : 0) + t * row[j]), 0, t * row[3]].map((v) => +v.toFixed(4)).join(' ')).join(' ') + ' 0 0 0 1 0'
+
+function NightFilters({ night, vw, vh }) {
+  const room = useRef(null)
+  const dim = useRef(null)
+  const t = useRef(night ? 1 : 0)
+  // valori iniziali fissi: dopo il montaggio li aggiorna solo l'animazione
+  const [init] = useState(() => ({ room: matrix(ROOM, night ? 1 : 0), dim: matrix(DIM, night ? 1 : 0) }))
+  useEffect(() => {
+    const apply = () => {
+      room.current?.setAttribute('values', matrix(ROOM, t.current))
+      dim.current?.setAttribute('values', matrix(DIM, t.current))
+    }
+    const from = t.current, to = night ? 1 : 0, t0 = performance.now(), dur = 650
+    let raf
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / dur)
+      t.current = from + (to - from) * (k < 0.5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2)
+      apply()
+      if (k < 1) raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [night])
+  const region = { filterUnits: 'userSpaceOnUse', x: -300, y: -300, width: vw + 600, height: vh + 600, colorInterpolationFilters: 'sRGB' }
+  return (
+    <defs>
+      <filter id="night-room" {...region}>
+        <feColorMatrix ref={room} type="matrix" values={init.room} />
+      </filter>
+      <filter id="night-dim" {...region}>
+        <feColorMatrix ref={dim} type="matrix" values={init.dim} />
+      </filter>
+    </defs>
+  )
+}
+
 export default function Scene({ lang, narrow, night, onLamp, onOpen, onHover }) {
   const [purr, setPurr] = useState(false)
   const [poke, setPoke] = useState(0)
+  const [lampUsed, setLampUsed] = useState(false)
+  // easter egg
+  const [broken, setBroken] = useState(false) // lampadina fulminata
+  const [flicker, setFlicker] = useState(false)
+  const lampHits = useRef([])
+  const [stunt, setStunt] = useState(0) // doppio clic sul drone
+  const droneClick = useRef({ t: 0, timer: 0 })
+  const catHits = useRef({ n: 0, t: 0 })
+  const [swat, setSwat] = useState(0)
+  const [toy, setToy] = useState('idle')
+  const [coffee, setCoffee] = useState(0)
+  const [jitter, setJitter] = useState(false)
+  const [flowers, setFlowers] = useState(() => new Set())
+  const [watered, setWatered] = useState({})
+  const [shades, setShades] = useState(false)
+  const shadesTimer = useRef(0)
   const Lo = narrow ? LAYOUTS.narrow : LAYOUTS.wide
   const L = (k) => tr(labels[k], lang)
   const [vw, vh] = Lo.vb
@@ -732,20 +966,73 @@ export default function Scene({ lang, narrow, night, onLamp, onOpen, onHover }) 
 
   const handle = (id, rect) => {
     if (id === 'lamp') {
+      if (broken || flicker) return
+      setLampUsed(true)
+      // accesa e spenta troppe volte di fila: la lampadina si fulmina
+      const now = Date.now()
+      lampHits.current = [...lampHits.current.filter((t) => now - t < 5000), now]
+      if (lampHits.current.length >= 8) {
+        lampHits.current = []
+        setFlicker(true)
+        onHover(L('lampBroken'))
+        setTimeout(() => {
+          setFlicker(false)
+          setBroken(true)
+          onLamp(false)
+        }, 1100)
+        setTimeout(() => setBroken(false), 7000)
+        return
+      }
       onLamp()
+      onHover(tr(night ? labels.lampOn : labels.lampOff, lang))
+      return
+    }
+    if (id === 'drone') {
+      // doppio clic: acrobazia; clic singolo: apre i voli
+      const c = droneClick.current, now = Date.now()
+      if (now - c.t < 320) {
+        clearTimeout(c.timer)
+        c.t = 0
+        setStunt((n) => n + 1)
+        return
+      }
+      c.t = now
+      c.timer = setTimeout(() => onOpen(id, rect), 320)
+      return
+    }
+    if (id === 'insta') {
+      window.open(INSTA.href, '_blank', 'noopener,noreferrer')
       return
     }
     if (id === 'cat') {
       setPurr(true)
       setPoke((n) => n + 1)
       setTimeout(() => setPurr(false), 1800)
+      // al quinto clic di fila butta giù il portapenne
+      const c = catHits.current, now = Date.now()
+      c.n = now - c.t < 1500 ? c.n + 1 : 1
+      c.t = now
+      if (c.n >= 5 && toy === 'idle') {
+        c.n = 0
+        setSwat((n) => n + 1)
+        setToy('fall')
+        setTimeout(() => setToy('back'), 6000)
+        setTimeout(() => setToy('idle'), 6700)
+      }
       return
     }
     onOpen(id, rect)
   }
   const hov = (id) => {
+    // fermo sul ritratto per un po': occhiali da sole
+    clearTimeout(shadesTimer.current)
+    if (id === 'about') shadesTimer.current = setTimeout(() => setShades(true), 2200)
+    else setShades(false)
     if (!id) return onHover(null)
+    if (id === 'mug') return onHover(L('mug'))
+    if (id === 'lamp' && broken) return onHover(L('lampBroken'))
     if (id === 'cat') return onHover(L('cat'))
+    if (id === 'insta') return onHover(`Instagram · ${INSTA.value}`)
     if (id === 'lamp') return onHover(tr(night ? labels.lampOff : labels.lampOn, lang))
     if (id.startsWith('book-')) {
       const b = books.find((x) => `book-${x.id}` === id)
@@ -758,6 +1045,20 @@ export default function Scene({ lang, narrow, night, onLamp, onOpen, onHover }) 
       {children}
     </Hot>
   )
+  const coffeeUp = () => {
+    const c = coffee + 1
+    if (c >= 3) {
+      setCoffee(0)
+      setJitter(true)
+      setTimeout(() => setJitter(false), 2600)
+    } else setCoffee(c)
+  }
+  const waterAt = (px, py) => {
+    const i = Lo.plants.findIndex(([x, y, s]) => Math.hypot(px - x, py - (y - 60 * s)) < 85 * s)
+    if (i < 0) return
+    setWatered((w) => ({ ...w, [i]: (w[i] || 0) + 1 }))
+    setFlowers((f) => new Set(f).add(i))
+  }
   const bookIdx = (id) => books.findIndex((x) => x.id === id)
   const bookHot = (id, x, y, hover, children) => {
     const b = books[bookIdx(id)]
@@ -822,28 +1123,17 @@ export default function Scene({ lang, narrow, night, onLamp, onOpen, onHover }) 
     return (
       <g key={fi}>
         {nodes}
-        {f.mug && (
-          <g transform={`translate(${f.at[0] + f.len / 2} ${y})`}>
-            <Mug />
-          </g>
-        )}
+        {f.mug && <MugHot x={f.at[0] + f.len * (f.cam ? 0.8 : 0.5)} y={y} level={coffee} label={L('mug')} onCoffee={coffeeUp} onDrop={waterAt} onHover={hov} />}
+        {f.cam && hot('insta', [f.at[0] + f.len * (f.mug ? 0.3 : 0.5), y], <InstaCam />, { hover: { y: -6, rotate: -4 } })}
       </g>
     )
   })
 
   return (
-    <svg className={`scene ${narrow ? 'narrow' : 'wide'}`} viewBox={`0 0 ${vw} ${vh}`} role="group" aria-label="Scaffale interattivo">
-      <defs>
-        {/* annulla l'inversione della modalità notte (ritratto e lampada restano a colori) */}
-        <filter id="unnight" colorInterpolationFilters="sRGB">
-          <feColorMatrix type="hueRotate" values="180" />
-          <feComponentTransfer>
-            <feFuncR type="linear" slope="-1.5625" intercept="1.28125" />
-            <feFuncG type="linear" slope="-1.5625" intercept="1.28125" />
-            <feFuncB type="linear" slope="-1.5625" intercept="1.28125" />
-          </feComponentTransfer>
-        </filter>
-      </defs>
+    <svg className={`scene ${narrow ? 'narrow' : 'wide'} ${jitter ? 'jitter' : ''}`} viewBox={`0 0 ${vw} ${vh}`} role="group" aria-label="Scaffale interattivo">
+      <NightFilters night={night} vw={vw} vh={vh} />
+      {/* la stanza ha il filtro notte; quadro e lampada gestiscono i propri colori */}
+      <g filter="url(#night-room)">
       {Lo.hang != null && <HangingPlant x={Lo.hang} />}
       {/* decorazioni a parete */}
       <g transform={`translate(${Lo.wall.clock[0]} ${Lo.wall.clock[1]})`}>
@@ -856,16 +1146,26 @@ export default function Scene({ lang, narrow, night, onLamp, onOpen, onHover }) 
       )}
       {/* cornici a parete */}
       {hot('edu', Lo.diploma, <Diploma />, { hover: { y: -5, rotate: -1.2 } })}
-      {hot('about', Lo.photo, <g transform={`scale(${Lo.photoS})`} style={{ filter: night ? 'url(#unnight)' : undefined }}><PhotoFrame /></g>, { hover: { y: -5, rotate: 1.2 } })}
+      </g>
+      {hot('about', Lo.photo, <g transform={`scale(${Lo.photoS})`}><PhotoFrame shades={shades} /></g>, { hover: { y: -5, rotate: 1.2 } })}
+      <g filter="url(#night-room)">
       {/* drone in volo */}
       <g transform={`translate(${Lo.drone.at[0]} ${Lo.drone.at[1]}) scale(${Lo.drone.s})`}>
         <motion.g
           animate={{ x: [0, 110, 50, -90, -30, 0].map((v) => v * k), y: [0, -24, 16, -16, 12, 0].map((v) => v * k), rotate: [0, 5, -3, 6, -4, 0] }}
           transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <Hot id="drone" label={L('drone')} onOpen={handle} onHover={hov} hover={{ scale: 1.12 }}>
-            <Drone />
-          </Hot>
+          {stunt > 0 &&
+            [4, 3, 2, 1].map((g) => (
+              <motion.g key={`${stunt}-${g}`} initial={{ opacity: 0 }} animate={{ ...stuntPath(narrow), opacity: [0, 0.4 - g * 0.08, 0.4 - g * 0.08, 0] }} transition={{ duration: 2.4, ease: 'easeInOut', delay: g * 0.07 }} pointerEvents="none">
+                <Drone />
+              </motion.g>
+            ))}
+          <motion.g key={stunt} animate={stunt ? stuntPath(narrow) : undefined} transition={{ duration: 2.4, ease: 'easeInOut' }}>
+            <Hot id="drone" label={L('drone')} onOpen={handle} onHover={hov} hover={{ scale: 1.12 }}>
+              <Drone />
+            </Hot>
+          </motion.g>
         </motion.g>
       </g>
       {/* mensole */}
@@ -877,7 +1177,7 @@ export default function Scene({ lang, narrow, night, onLamp, onOpen, onHover }) 
         </g>
       ))}
       {Lo.plants.map(([x, y, s, dl, v], i) => (
-        <Plant key={i} x={x} y={y} s={s} delay={dl} variant={v} />
+        <Plant key={i} x={x} y={y} s={s} delay={dl} variant={v} flower={flowers.has(i)} watered={watered[i] || 0} />
       ))}
       {uprightNodes}
       {flatNodes}
@@ -887,12 +1187,24 @@ export default function Scene({ lang, narrow, night, onLamp, onOpen, onHover }) 
         </g>
       )}
 
-      {hot('cat', Lo.cat, <Cat purr={purr} lang={lang} poke={poke} />, { hover: { y: -2 } })}
+      <g transform={`translate(${Lo.catToy[0]} ${Lo.catToy[1]})`} pointerEvents="none">
+        <motion.g
+          initial={false}
+          animate={toy === 'fall' ? { x: [0, -6, -14], y: [0, -8, 360], rotate: [0, -30, -200], opacity: [1, 1, 0] } : { x: 0, y: 0, rotate: 0, opacity: toy === 'back' ? [0, 1] : 1 }}
+          transition={toy === 'fall' ? { duration: 1.1, delay: 0.32, ease: 'easeIn', times: [0, 0.2, 1] } : { duration: 0.6 }}
+          style={{ transformBox: 'fill-box', transformOrigin: '50% 100%' }}
+        >
+          <PenCup />
+        </motion.g>
+      </g>
+      {hot('cat', Lo.cat, <Cat purr={purr} lang={lang} poke={poke} swat={swat} />, { hover: { y: -2 } })}
       {hot('web', Lo.devices.web, <Monitor />, { hover: { y: -6 } })}
       {hot('mobile', Lo.devices.mobile, <Phone />, { hover: { y: -8, rotate: -2 } })}
       {hot('watch', Lo.devices.watch, <Watch />, { hover: { y: -8, rotate: 2 } })}
-      {Lo.lamp && hot('lamp', [Lo.lamp[0], Lo.lamp[1]], <g transform={`scale(${narrow ? -Lo.lamp[2] : Lo.lamp[2]} ${Lo.lamp[2]})`}><Lamp on={night} /></g>, { hover: { y: -3 } })}
       {hot('contact', Lo.devices.contact, <Telephone />, { hover: { y: -4, rotate: [0, -1.6, 1.6, -1.6, 1.6, 0] }, hoverTr: { duration: 0.5 } })}
+      </g>
+      {/* 3) la lampada (con il post-it): sempre con i suoi colori, accesa di notte */}
+      {Lo.lamp && hot('lamp', [Lo.lamp[0], Lo.lamp[1]], <g transform={`scale(${narrow ? -Lo.lamp[2] : Lo.lamp[2]} ${Lo.lamp[2]})`}><Lamp on={night && !broken} broken={broken} flicker={flicker} lang={lang} flip={narrow} nudge={!lampUsed} noteS={narrow ? 1.45 : 1} /></g>, { hover: { y: -3 } })}
     </svg>
   )
 }

@@ -24,7 +24,11 @@ export default function App() {
   const [open, setOpen] = useState(null) // { id, dx, dy }
   const [hover, setHover] = useState(null)
   const [narrow, setNarrow] = useState(() => window.innerWidth / window.innerHeight < NARROW_BELOW)
-  const [night, setNight] = useState(false)
+  // tema in base all'ora: notte dalle 20 alle 7 (la lampada lo cambia quando vuoi)
+  const [night, setNight] = useState(() => {
+    const h = new Date().getHours()
+    return h >= 20 || h < 7
+  })
   const wrapRef = useRef(null)
 
   const t = ui[lang]
@@ -43,6 +47,12 @@ export default function App() {
   useEffect(() => {
     document.body.classList.toggle('night', night)
   }, [night])
+
+  // alone caldo dietro la lampada (posizione diversa nei due layout)
+  useEffect(() => {
+    document.body.style.setProperty('--glow-x', narrow ? '80%' : '22%')
+    document.body.style.setProperty('--glow-y', narrow ? '80%' : '70%')
+  }, [narrow])
 
   useEffect(() => {
     document.documentElement.lang = lang
@@ -85,7 +95,7 @@ export default function App() {
       </header>
 
       <main className="scene-wrap" ref={wrapRef}>
-        <Scene lang={lang} narrow={narrow} night={night} onLamp={() => setNight((n) => !n)} onOpen={openPanel} onHover={setHover} />
+        <Scene lang={lang} narrow={narrow} night={night} onLamp={(v) => setNight((n) => (typeof v === 'boolean' ? v : !n))} onOpen={openPanel} onHover={setHover} />
       </main>
 
       <p className="caption" aria-live="polite">

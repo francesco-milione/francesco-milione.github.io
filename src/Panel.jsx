@@ -4,7 +4,7 @@ import { about, edu, projects, books, drone, contact, watchPages, tr, ui, PHOTO 
 import { ProjectIcon, Pattern, Portrait, INK, PAPER, SOFT, ORANGE, GREEN, GREEN2 } from './art.jsx'
 import { TimerScreen, PulseScreen, SITES, URLS, BigTelephone, BigDiploma } from './objects.jsx'
 import { Drone as DroneArt } from './Scene.jsx'
-import { useViewport, useKeys } from './hooks.js'
+import { useViewport, useKeys, useClock } from './hooks.js'
 
 // ───────────────────────────────────────────────────────────
 //  Ogni oggetto, quando lo apri, è l'interfaccia: niente card.
@@ -90,12 +90,13 @@ function AppPage({ a, i, lang, onBack }) {
 function PhoneView({ lang }) {
   const apps = projects.mobile.items
   const [sel, setSel] = useState(null)
+  const now = useClock()
   return (
     <Fit w={320} h={660}>
       <div className="phone">
         <div className="p-screen">
           <div className="p-status">
-            <span>9:41</span>
+            <span>{now}</span>
             <span className="p-bat" />
           </div>
           <div className="p-island" />
@@ -234,7 +235,7 @@ function WatchView({ lang }) {
               <motion.div key={p} className="w-page" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -18 }} transition={{ duration: 0.22 }}>
                 {p === 0 && (
                   <svg viewBox="0 0 120 120" className="w-ring" aria-hidden="true">
-                    <circle cx="60" cy="60" r="46" fill="none" stroke={SOFT} strokeWidth="11" />
+                    <circle className="track" cx="60" cy="60" r="46" fill="none" stroke={SOFT} strokeWidth="11" />
                     <circle className="ring-run" cx="60" cy="60" r="46" fill="none" stroke={ORANGE} strokeWidth="11" strokeLinecap="round" pathLength="100" transform="rotate(-90 60 60)" />
                     <text x="60" y="68" textAnchor="middle" fontFamily="DM Mono, monospace" fontSize="26" fontWeight="500" fill={INK}>
                       0:45
@@ -265,15 +266,15 @@ const slide = {
   out: (d) => ({ x: -d * 140, opacity: 0, rotate: -d * 4 }),
 }
 
-function Carousel({ n, children }) {
-  const [i, setI] = useState(0)
+function Carousel({ n, start = 0, timeline, children }) {
+  const [i, setI] = useState(start)
   const [dir, setDir] = useState(1)
-  const go = (d) => {
-    const t = i + d
-    if (t < 0 || t >= n) return
-    setDir(d)
+  const jump = (t) => {
+    if (t < 0 || t >= n || t === i) return
+    setDir(t > i ? 1 : -1)
     setI(t)
   }
+  const go = (d) => jump(i + d)
   useKeys((k) => {
     if (k === 'ArrowRight') go(1)
     if (k === 'ArrowLeft') go(-1)
@@ -303,15 +304,29 @@ function Carousel({ n, children }) {
           </motion.div>
         </AnimatePresence>
       </div>
-      <div className="ctrl">
+      <div className={`ctrl ${timeline ? 'has-tl' : ''}`}>
         <button onClick={() => go(-1)} disabled={i === 0} aria-label="Previous">
           ‹
         </button>
-        <span className="dots" aria-hidden="true">
-          {Array.from({ length: n }).map((_, k) => (
-            <i key={k} className={k === i ? 'on' : ''} />
-          ))}
-        </span>
+        {timeline ? (
+          <ol className="tl">
+            {timeline.map((t, k) => (
+              <li key={k}>
+                <button className={k === i ? 'on' : k < i ? 'past' : ''} onClick={() => jump(k)} aria-current={k === i ? 'step' : undefined}>
+                  <i />
+                  <b>{t.name}</b>
+                  {t.year && <span>{t.year}</span>}
+                </button>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <span className="dots" aria-hidden="true">
+            {Array.from({ length: n }).map((_, k) => (
+              <i key={k} className={k === i ? 'on' : ''} />
+            ))}
+          </span>
+        )}
         <button onClick={() => go(1)} disabled={i === n - 1} aria-label="Next">
           ›
         </button>
@@ -322,12 +337,13 @@ function Carousel({ n, children }) {
 
 // ── LAUREE ──────────────────────────────────────────────────
 function EduView({ lang }) {
+  const n = edu.items.length
   return (
-    <Carousel n={edu.items.length}>
+    <Carousel n={n} start={n - 1} timeline={edu.items.map((it) => ({ year: it.tl.year, name: T(it.tl.name, lang) }))}>
       {(i) => {
         const it = edu.items[i]
         return (
-          <Fit w={360} h={460}>
+          <Fit w={360} h={460} reserve={190}>
             <BigDiploma label={T(it.diploma, lang)} course={T(it.course, lang)} year={T(it.year, lang)} thesis={T(it.thesis, lang)} level={it.level || 1} head={it.head} lines={it.lines} />
           </Fit>
         )
@@ -676,9 +692,11 @@ function ContactView({ lang }) {
 // ── DRONE ───────────────────────────────────────────────────
 function FlightsView({ lang }) {
   const [play, setPlay] = useState(null)
+  const vp = useViewport()
   return (
     <div className="tel-wrap">
-      <Fit w={360} h={200}>
+      {/* il disegno è alto 252: il riquadro deve contenerlo tutto, e su telefono il drone resta piccolo */}
+      <Fit w={360} h={252} max={vp.w < 600 ? 0.62 : 1}>
         <svg viewBox="-100 -70 200 140" width="360" height="252" style={{ overflow: 'visible' }} aria-label="Drone">
           <motion.g animate={{ y: [0, -9, 0, 6, 0], rotate: [0, 3, 0, -3, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
             <DroneArt />

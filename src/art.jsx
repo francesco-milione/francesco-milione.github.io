@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
+import { motion } from 'framer-motion'
 import { TRACE } from './portraitTrace.js'
 
 // Disegni riutilizzabili (SVG) — palette minimal: nero, crema, arancio, verde.
@@ -89,20 +90,103 @@ function Eyes() {
   )
 }
 
+// Occhi sulla foto vera (coordinate in pixel della foto 960×1265):
+// l'iride segue il puntatore sotto le palpebre della foto,
+// lo sguardo vaga da solo, e le palpebre (pelle presa dalla foto) sbattono e fanno l'occhiolino. Ciglia e contorni restano quelli della foto.
+const PHOTO_EYES = [
+  { id: 'l', box: [336, 501, 470, 559], irisBox: [382, 516, 424, 544], lidBox: [355, 510, 452, 543] },
+  { id: 'r', box: [536, 502, 654, 563], irisBox: [579, 517, 620, 548], lidBox: [555, 511, 636, 547] },
+]
+const PHOTO_W = 960
+
+function PhotoEyes() {
+  const refs = useRef([])
+  useEffect(() => {
+    const move = (e) => {
+      refs.current.forEach((el) => {
+        if (!el) return
+        const r = el.getBoundingClientRect()
+        if (!r.width) return
+        const dx = e.clientX - (r.left + r.width / 2)
+        const dy = e.clientY - (r.top + r.height / 2)
+        const d = Math.hypot(dx, dy) || 1
+        const k = Math.min(1, d / 260)
+        el.style.transform = `translate(${((dx / d) * 7 * k).toFixed(2)}px, ${((dy / d) * 2.2 * k).toFixed(2)}px)`
+      })
+    }
+    window.addEventListener('pointermove', move)
+    return () => window.removeEventListener('pointermove', move)
+  }, [])
+  const base = import.meta.env.BASE_URL
+  const img = (name, id, [x0, y0, x1, y1], extra = {}) => <image href={`${base}${name}-${id}.png`} x={x0} y={y0} width={x1 - x0} height={y1 - y0} {...extra} />
+  // strati senza clipPath (funzionano in ogni browser):
+  // bianco dell'occhio → iride che si muove → foto dell'occhio con il buco dell'apertura → palpebre per il battito
+  return (
+    <g>
+      {PHOTO_EYES.map((e, i) => (
+        <g key={e.id}>
+          {img('sclera', e.id, e.box)}
+          <g ref={(el) => (refs.current[i] = el)} className="iris-track">
+            <g className="look-p">{img('iris', e.id, e.irisBox)}</g>
+          </g>
+          {img('lids', e.id, e.box)}
+          {img('lid', e.id, e.lidBox, { className: `plid plid-${e.id}` })}
+        </g>
+      ))}
+    </g>
+  )
+}
+
+// Occhiali da sole pixelati ("deal with it"), in pixel della foto: scendono dall'alto
+const SHADE_U = 13
+const LENS = ['1111111111', '1111111111', '0111111110', '0011111100']
+const SHINE = [[2, 1], [3, 1], [1, 2]]
+function PixelShades({ show }) {
+  const u = SHADE_U
+  const lenses = [336, 532]
+  const y0 = 506
+  const px = []
+  lenses.forEach((x0, li) => {
+    LENS.forEach((row, r) => [...row].forEach((c, k) => c === '1' && px.push(<rect key={`${li}-${r}-${k}`} x={x0 + k * u} y={y0 + r * u} width={u + 0.5} height={u + 0.5} fill="#111" />)))
+    SHINE.forEach(([k, r]) => px.push(<rect key={`s${li}-${k}-${r}`} x={x0 + k * u} y={y0 + r * u} width={u} height={u} fill="#fff" />))
+  })
+  return (
+    <motion.g
+      initial={false}
+      animate={show ? { y: 0, opacity: 1 } : { y: -700, opacity: 0 }}
+      transition={show ? { type: 'spring', stiffness: 90, damping: 14 } : { duration: 0.35 }}
+      pointerEvents="none"
+    >
+      {/* barra superiore con le stanghette e il ponte */}
+      <rect x={lenses[0] - 3 * u} y={y0} width={lenses[1] + 10 * u + 3 * u - (lenses[0] - 3 * u)} height={u + 0.5} fill="#111" />
+      {px}
+    </motion.g>
+  )
+}
+
 // Ritratto stilizzato dentro la cornice ad arco (coordinate 0..150 x 0..190)
-export function Portrait({ photo }) {
+export function Portrait({ photo, shades = false }) {
+  const uid = useId().replace(/[^a-zA-Z0-9]/g, '')
+  const clip = `arch-clip-${uid}`
   return (
     <g>
       <defs>
-        <clipPath id="arch-clip">
+        <clipPath id={clip}>
           <path d="M12 178 V75 A63 63 0 0 1 138 75 V178 Z" />
         </clipPath>
       </defs>
       <path d="M12 178 V75 A63 63 0 0 1 138 75 V178 Z" fill="#f7d3b0" />
       {photo ? (
-        <image href={photo} x="12" y="12" width="126" height="166" preserveAspectRatio="xMidYMid slice" clipPath="url(#arch-clip)" />
+        <g>
+          {/* la foto è già sagomata ad arco (sfondo trasparente): non dipende dal clipPath */}
+          <image href={photo} x="12" y="12" width="126" height="166" preserveAspectRatio="xMidYMid slice" />
+          <g transform={`translate(12 12) scale(${126 / PHOTO_W})`}>
+            <PhotoEyes />
+            <PixelShades show={shades} />
+          </g>
+        </g>
       ) : (
-        <g clipPath="url(#arch-clip)">
+        <g clipPath={`url(#${clip})`}>
           <rect x="0" y="0" width="150" height="190" fill="#d6ecef" />
           <circle cx="125" cy="34" r="10" fill={ORANGE} opacity=".92" />
           {/* ricalcato dalla foto: strati piatti di colore */}
@@ -112,6 +196,48 @@ export function Portrait({ photo }) {
           <Eyes />
           <path d="M74 86 q-3 8 -1 11 q3 2 6 0" stroke="#b98563" strokeWidth="1.3" fill="none" strokeLinecap="round" />
         </g>
+      )}
+    </g>
+  )
+}
+
+// Telefono a disco rétro (origine in basso al centro, largo ~150).
+// `handset` avvolge la cornetta: sullo scaffale squilla via CSS, nel pannello si solleva.
+export function TelephoneArt({ handset = (c) => <g className="tel-handset">{c}</g> }) {
+  const holes = Array.from({ length: 10 }).map((_, i) => {
+    const a = -Math.PI * 0.62 + (i / 10) * Math.PI * 1.62
+    return [Math.cos(a) * 13.6, -24 + Math.sin(a) * 13.6]
+  })
+  // filo a spirale dalla cornetta al corpo
+  const coil = Array(6).fill('c-7 1.5 -7 7.5 0 6').join(' ')
+  return (
+    <g>
+      {/* filo verso la presa */}
+      <path d="M70 -10 C96 -10 108 -2 98 0" stroke={INK} strokeWidth="2.6" fill="none" strokeLinecap="round" strokeDasharray="1 5" />
+      {/* corpo */}
+      <path d="M-70 -4 C-68 -24 -60 -40 -46 -46 L46 -46 C60 -40 68 -24 70 -4 Z" fill={ORANGE} stroke={INK} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M-54 -36 C-48 -42 -40 -43 -30 -43" stroke="#fff" strokeWidth="3" strokeLinecap="round" fill="none" opacity=".45" />
+      <rect x="-76" y="-7" width="152" height="8" rx="4" fill={INK} />
+      {/* disco */}
+      <circle cy="-24" r="20" fill={PAPER} stroke={INK} strokeWidth="2.6" />
+      {holes.map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="3.1" fill="#f2c9a6" stroke={INK} strokeWidth="1.5" />
+      ))}
+      <circle cy="-24" r="6.2" fill={ORANGE} stroke={INK} strokeWidth="1.8" />
+      <path d="M13 -10 l5 4" stroke={INK} strokeWidth="2.4" strokeLinecap="round" />
+      {/* forcelle */}
+      <path d="M-44 -46 v-8 M-32 -46 v-8 M32 -46 v-8 M44 -46 v-8" stroke={INK} strokeWidth="4" strokeLinecap="round" />
+      {/* filo a spirale */}
+      <path d={`M-64 -58 ${coil}`} stroke={INK} strokeWidth="2.2" fill="none" strokeLinecap="round" transform="translate(-6 0)" />
+      {handset(
+        <g>
+          <path d="M-64 -60 C-50 -70 50 -70 64 -60" stroke={INK} strokeWidth="11" strokeLinecap="round" fill="none" />
+          <path d="M-64 -60 C-50 -70 50 -70 64 -60" stroke="#3a3a44" strokeWidth="3" strokeLinecap="round" fill="none" transform="translate(0 -2.5)" opacity=".8" />
+          <rect x="-82" y="-66" width="30" height="15" rx="7.5" fill={INK} transform="rotate(14 -67 -58.5)" />
+          <rect x="-78" y="-64" width="12" height="3" rx="1.5" fill="#3a3a44" transform="rotate(14 -67 -58.5)" />
+          <rect x="52" y="-66" width="30" height="15" rx="7.5" fill={INK} transform="rotate(-14 67 -58.5)" />
+          <rect x="66" y="-64" width="12" height="3" rx="1.5" fill="#3a3a44" transform="rotate(-14 67 -58.5)" />
+        </g>,
       )}
     </g>
   )
