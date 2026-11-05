@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TimerLift — Start</title>
+  <link rel="icon" type="image/png" href="/timerlift-icon.png" />
+  <link rel="apple-touch-icon" href="/timerlift-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: #0a0a0a;
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      border-bottom: 1px solid #1f1f1f;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+
+    header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    header span {
+      font-size: 13px;
+      color: #666;
+      display: block;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 32px;
+    }
+
+    main img {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+      margin-bottom: 32px;
+    }
+
+    h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: #888;
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 420px;
+      margin-bottom: 40px;
+    }
+
+    a.btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #00e020;
+      color: #000;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: opacity 0.15s;
+    }
+
+    a.btn:hover { opacity: 0.85; }
+
+    footer {
+      border-top: 1px solid #1f1f1f;
+      padding: 20px 32px;
+      text-align: center;
+      font-size: 13px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="/timerlift-icon.png" alt="TimerLift icon" />
+    <div>
+      <h1>TimerLift</h1>
+      <span>Start workout</span>
+    </div>
+  </header>
+
+  <main>
+    <img src="/timerlift-icon.png" alt="TimerLift" />
+    <h2>Open TimerLift</h2>
+    <p>This link starts your workout in the TimerLift app. If the app didn't open, install it from the App Store and scan the tag again.</p>
+    <a class="btn" href="https://apps.apple.com/app/timerlift/id6743160729">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v12"/>
+        <path d="m7 10 5 5 5-5"/>
+        <path d="M5 21h14"/>
+      </svg>
+      Get it on the App Store
+    </a>
+  </main>
+
+  <footer>© 2026 TimerLift · All rights reserved</footer>
+</body>
+</html>
